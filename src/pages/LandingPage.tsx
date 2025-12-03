@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { nanoid } from 'nanoid';
+import { PaperAirplaneIcon } from '@heroicons/react/24/solid';
 import { useConversationStore } from '../lib/store';
 import { useAuthStore } from '../lib/auth-store';
 import { chatApi } from '../lib/api';
@@ -73,16 +74,26 @@ export function LandingPage() {
           </div>
 
           <form onSubmit={handleSubmit} className="mt-8 px-4 sm:px-8">
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder={t('landing.placeholder')}
-              disabled={isLoading}
-              className="surface-input w-full rounded-2xl px-6 py-4 text-base shadow-sm placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#AD2023]/60 sm:text-lg border disabled:opacity-50"
-              autoFocus
-            />
+            <div className="flex items-center gap-3">
+              <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder={t('landing.placeholder')}
+                disabled={isLoading}
+                className="surface-input flex-1 rounded-2xl px-6 py-4 text-base shadow-sm placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#AD2023]/60 sm:text-lg border disabled:opacity-50"
+                autoFocus
+              />
+              <button
+                type="submit"
+                disabled={!input.trim() || isLoading}
+                className="flex items-center justify-center rounded-xl bg-[#AD2023] p-4 text-white hover:bg-[#AD2023]/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                aria-label={t('chat.send')}
+              >
+                <PaperAirplaneIcon className="h-6 w-6" />
+              </button>
+            </div>
           </form>
         </div>
       </div>

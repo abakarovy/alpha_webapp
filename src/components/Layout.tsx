@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useLocation, Outlet, useNavigate } from 'react-router-dom';
 import { useConversationStore } from '../lib/store';
 import { useAuthStore } from '../lib/auth-store';
@@ -11,6 +11,8 @@ import {
   Cog6ToothIcon,
   ArrowRightOnRectangleIcon,
   UserIcon,
+  Bars3Icon,
+  XMarkIcon,
 } from '@heroicons/react/24/outline';
 
 export function Layout() {
@@ -19,6 +21,7 @@ export function Layout() {
   const { conversations, deleteConversation, syncConversations } = useConversationStore();
   const { user, isAuthenticated, logout } = useAuthStore();
   const { t } = useTranslation();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     if (isAuthenticated && user) {
@@ -53,11 +56,38 @@ export function Layout() {
   const handleLogout = () => {
     logout();
     navigate('/login');
+    setIsMobileMenuOpen(false);
+  };
+
+  const handleLinkClick = () => {
+    setIsMobileMenuOpen(false);
   };
 
   return (
     <div className="flex h-screen w-screen">
-      <aside className="sidebar-shell hidden w-64 flex-col border-r px-6 py-8 sm:flex">
+      {isMobileMenuOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/50 sm:hidden"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+      <aside
+        className={`sidebar-shell fixed left-0 top-0 z-50 h-full w-64 flex-col border-r px-6 py-8 transition-transform duration-300 sm:relative sm:z-auto sm:flex ${
+          isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full sm:translate-x-0'
+        }`}
+      >
+        <div className="mb-6 flex items-center justify-between sm:justify-center">
+          <div className="text-sm font-semibold tracking-tight text-gray-200 flex justify-center">
+            <img src='https://alfabank.servicecdn.ru/site-upload/31/99/10565/D_red_logo.svg'/>
+          </div>
+          <button
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="sm:hidden text-gray-400 hover:text-gray-200"
+            aria-label="Close menu"
+          >
+            <XMarkIcon className="h-6 w-6" />
+          </button>
+        </div>
         <div className="mb-6 text-sm font-semibold tracking-tight text-gray-200 flex justify-center">
           <img src='https://alfabank.servicecdn.ru/site-upload/31/99/10565/D_red_logo.svg'/>
         </div>
@@ -65,6 +95,7 @@ export function Layout() {
         <nav className="space-y-2 text-xs text-gray-500">
           <Link
             to="/"
+            onClick={handleLinkClick}
             className={`flex items-center gap-2 rounded-lg px-3 py-2 transition-colors ${
               isActive('/') && location.pathname !== '/settings' && location.pathname !== '/templates'
                 ? 'bg-white/10 text-[#AD2023] dark:text-[#AD2023]'
@@ -76,6 +107,7 @@ export function Layout() {
           </Link>
           <Link
             to="/templates"
+            onClick={handleLinkClick}
             className={`flex items-center gap-2 rounded-lg px-3 py-2 transition-colors ${
               isActive('/templates')
                 ? 'bg-white/10 text-[#AD2023] dark:text-[#AD2023]'
@@ -101,6 +133,7 @@ export function Layout() {
                 <Link
                   key={conv.id}
                   to={`/chat/${conv.id}`}
+                  onClick={handleLinkClick}
                   className={`group relative flex items-center gap-2 rounded-lg px-3 py-2 text-xs transition-colors ${
                     isChatActive(conv.id)
                       ? 'bg-white/10 text-[#AD2023] dark:text-[#AD2023]'
@@ -125,6 +158,7 @@ export function Layout() {
         <div className="border-t border-white/10 pt-4 space-y-2">
           <Link
             to="/settings"
+            onClick={handleLinkClick}
             className={`flex items-center gap-2 rounded-lg px-3 py-2 text-xs transition-colors ${
               isActive('/settings')
                 ? 'bg-white/10 text-[#AD2023] dark:text-[#AD2023]'
@@ -139,6 +173,7 @@ export function Layout() {
             <div className="space-y-2">
               <Link
                 to="/profile"
+                onClick={handleLinkClick}
                 className={`flex items-center gap-2 rounded-lg px-3 py-2 text-xs transition-colors ${
                   isActive('/profile')
                     ? 'bg-white/10 text-[#AD2023] dark:text-[#AD2023]'
@@ -160,6 +195,7 @@ export function Layout() {
             <div className="space-y-2">
               <Link
                 to="/login"
+                onClick={handleLinkClick}
                 className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs text-gray-500 transition-colors hover:bg-white/5 hover:text-gray-200"
               >
                 <ArrowRightOnRectangleIcon className="h-4 w-4 text-[#AD2023]" />
@@ -167,6 +203,7 @@ export function Layout() {
               </Link>
               <Link
                 to="/register"
+                onClick={handleLinkClick}
                 className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs text-gray-500 transition-colors hover:bg-white/5 hover:text-gray-200"
               >
                 <UserIcon className="h-4 w-4 text-[#AD2023]" />
@@ -178,6 +215,13 @@ export function Layout() {
       </aside>
 
       <main className="flex flex-1 flex-col overflow-hidden">
+        <button
+          onClick={() => setIsMobileMenuOpen(true)}
+          className="fixed left-4 top-4 z-30 rounded-lg bg-[#AD2023] p-2 text-white shadow-lg sm:hidden"
+          aria-label="Open menu"
+        >
+          <Bars3Icon className="h-6 w-6" />
+        </button>
         <Outlet />
       </main>
     </div>

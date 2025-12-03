@@ -3,6 +3,7 @@ import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import { nanoid } from 'nanoid';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { PaperAirplaneIcon } from '@heroicons/react/24/solid';
 import { useConversationStore, type Message } from '../lib/store';
 import { useAuthStore } from '../lib/auth-store';
 import { chatApi } from '../lib/api';
@@ -363,9 +364,10 @@ export function ChatPage() {
               <button
                 type="submit"
                 disabled={!input.trim() || isSending}
-                className="rounded-xl bg-[#AD2023] px-5 py-3 text-sm font-medium text-white hover:bg-[#AD2023]/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="flex items-center justify-center rounded-xl bg-[#AD2023] p-3 text-white hover:bg-[#AD2023]/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                aria-label={t('chat.send')}
               >
-                {t('chat.send')}
+                <PaperAirplaneIcon className="h-5 w-5" />
               </button>
             </div>
           </form>
