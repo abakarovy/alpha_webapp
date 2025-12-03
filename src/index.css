@@ -1,6 +1,218 @@
 @import "tailwindcss";
 
+html, body {
+  height: 100%;
+  overflow-x: hidden;
+}
 
-button, a {
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text',
+    'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background:
+    radial-gradient(circle at top left, rgba(173, 32, 35, 0.28), transparent 55%),
+    radial-gradient(circle at bottom right, rgba(173, 32, 35, 0.12), transparent 55%),
+    radial-gradient(circle at top right, rgba(255, 255, 255, 0.06), transparent 55%),
+    #050509;
+  background-attachment: fixed;
+  color: #e5e7eb;
+}
+
+.sidebar-shell {
+  background-color: rgba(0, 0, 0, 0.4);
+  border-right-color: rgba(255, 255, 255, 0.1);
+  color: #e5e7eb;
+}
+
+.surface-card {
+  background-color: rgba(0, 0, 0, 0.4);
+  border-color: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.8);
+}
+
+.surface-input {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #e5e7eb;
+}
+
+.chat-shell {
+  background-color: transparent;
+}
+
+.chat-input-bar {
+  background-color: rgba(0, 0, 0, 0.4);
+  border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+.chat-bubble-user {
+  background-color: #ad2023;
+  color: #ffffff;
+}
+
+.chat-bubble-assistant {
+  background-color: rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #e5e7eb;
+}
+
+.prose {
+  color: inherit;
+}
+
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.prose table th,
+.prose table td {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0.5rem;
+}
+
+.prose table th {
+  background-color: rgba(255, 255, 255, 0.1);
+  font-weight: 600;
+}
+
+.prose code {
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-size: 0.875em;
+}
+
+.prose pre {
+  background-color: rgba(0, 0, 0, 0.3);
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+}
+
+.prose pre code {
+  background-color: transparent;
+  padding: 0;
+}
+
+.prose ul,
+.prose ol {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+}
+
+.prose li {
+  margin: 0.25rem 0;
+}
+
+.prose strong {
+  font-weight: 600;
+}
+
+.prose a {
+  color: #AD2023;
+  text-decoration: underline;
+}
+
+@media (prefers-color-scheme: light) {
+  body {
+    background:
+      radial-gradient(circle at top left, rgba(173, 32, 35, 0.12), transparent 55%),
+      radial-gradient(circle at bottom right, rgba(173, 32, 35, 0.06), transparent 55%),
+      radial-gradient(circle at top right, rgba(15, 23, 42, 0.03), transparent 55%),
+      #f9fafb;
+    background-attachment: fixed;
+    color: #111827;
+  }
+
+  .sidebar-shell {
+    background-color: #ffffff;
+    border-right-color: rgba(15, 23, 42, 0.08);
+    color: #111827;
+  }
+
+  .surface-card {
+    background-color: #ffffff;
+    border-color: rgba(15, 23, 42, 0.08);
+    box-shadow: 0 16px 36px rgba(15, 23, 42, 0.08);
+  }
+
+  .surface-input {
+    background-color: #ffffff;
+    border-color: rgba(15, 23, 42, 0.12);
+    color: #111827;
+  }
+
+  .chat-input-bar {
+    background-color: rgba(255, 255, 255, 0.96);
+    border-top-color: rgba(15, 23, 42, 0.08);
+  }
+
+  .chat-bubble-assistant {
+    background-color: #f3f4f6;
+    border-color: rgba(15, 23, 42, 0.12);
+    color: #111827;
+  }
+
+  .prose table th,
+  .prose table td {
+    border: 1px solid rgba(0, 0, 0, 0.2);
+  }
+
+  .prose table th {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+
+  .prose code {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+
+  .prose pre {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+
+  .prose a {
+    color: #AD2023;
+  }
+}
+
+button,
+a {
   cursor: pointer;
+}
+
+select {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #e5e7eb;
+}
+
+select:focus {
+  outline: none;
+  border-color: rgba(173, 32, 35, 0.5);
+}
+
+select option {
+  background-color: rgba(0, 0, 0, 0.95);
+  color: #e5e7eb;
+  padding: 0.5rem;
+}
+
+@media (prefers-color-scheme: light) {
+  select {
+    background-color: #ffffff;
+    border-color: rgba(15, 23, 42, 0.12);
+    color: #111827;
+  }
+
+  select:focus {
+    border-color: rgba(173, 32, 35, 0.5);
+  }
+
+  select option {
+    background-color: #ffffff;
+    color: #111827;
+  }
 }

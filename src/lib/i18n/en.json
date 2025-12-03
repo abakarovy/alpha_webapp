@@ -1,0 +1,72 @@
+{
+  "nav": {
+    "home": "Home",
+    "templates": "Templates",
+    "settings": "Settings",
+    "conversations": "Conversations",
+    "noConversations": "No conversations yet",
+    "deleteConversation": "Delete conversation"
+  },
+  "landing": {
+    "title": "Smile AI",
+    "subtitle": "Your business assistant UI. Backend and AI will plug in later.",
+    "placeholder": "Ask anything about your business..."
+  },
+  "chat": {
+    "emptyTitle": "Start a conversation",
+    "emptySubtitle": "Send a message to begin chatting",
+    "inputPlaceholder": "Type your message...",
+    "send": "Send",
+    "placeholderResponse": "This is a placeholder response. Backend integration coming soon.",
+    "download": "Download"
+  },
+  "settings": {
+    "title": "Settings",
+    "appearance": "Appearance",
+    "account": "Account",
+    "language": "Language",
+    "appearanceComingSoon": "Theme settings coming soon...",
+    "accountComingSoon": "Account settings coming soon...",
+    "selectLanguage": "Select Language"
+  },
+  "templates": {
+    "title": "Templates",
+    "comingSoon": "Template functionality coming soon..."
+  },
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "email": "Email",
+    "password": "Password",
+    "emailPlaceholder": "Enter your email",
+    "passwordPlaceholder": "Enter your password",
+    "fullName": "Full Name",
+    "nickname": "Nickname",
+    "phone": "Phone",
+    "country": "Country",
+    "gender": "Gender",
+    "businessType": "Business Type",
+    "selectGender": "Select gender",
+    "male": "Male",
+    "female": "Female",
+    "other": "Other",
+    "general": "General",
+    "retail": "Retail",
+    "ecommerce": "E-commerce",
+    "service": "Service",
+    "loading": "Loading...",
+    "noAccount": "Don't have an account?",
+    "haveAccount": "Already have an account?",
+    "logout": "Logout"
+  },
+  "profile": {
+    "title": "Profile",
+    "personalInfo": "Personal Information",
+    "businessInfo": "Business Information",
+    "emailCannotChange": "Email cannot be changed",
+    "save": "Save Changes",
+    "saving": "Saving...",
+    "updateSuccess": "Profile updated successfully"
+  }
+}
+

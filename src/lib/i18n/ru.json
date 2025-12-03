@@ -1,0 +1,72 @@
+{
+  "nav": {
+    "home": "Главная",
+    "templates": "Шаблоны",
+    "settings": "Настройки",
+    "conversations": "Разговоры",
+    "noConversations": "Пока нет разговоров",
+    "deleteConversation": "Удалить разговор"
+  },
+  "landing": {
+    "title": "Smile AI",
+    "subtitle": "Ваш бизнес-ассистент. Бэкенд и AI будут подключены позже.",
+    "placeholder": "Спросите что-нибудь о вашем бизнесе..."
+  },
+  "chat": {
+    "emptyTitle": "Начните разговор",
+    "emptySubtitle": "Отправьте сообщение, чтобы начать общение",
+    "inputPlaceholder": "Введите ваше сообщение...",
+    "send": "Отправить",
+    "placeholderResponse": "Это заглушка ответа. Интеграция с бэкендом скоро будет добавлена.",
+    "download": "Скачать"
+  },
+  "settings": {
+    "title": "Настройки",
+    "appearance": "Внешний вид",
+    "account": "Аккаунт",
+    "language": "Язык",
+    "appearanceComingSoon": "Настройки темы скоро...",
+    "accountComingSoon": "Настройки аккаунта скоро...",
+    "selectLanguage": "Выберите язык"
+  },
+  "templates": {
+    "title": "Шаблоны",
+    "comingSoon": "Функциональность шаблонов скоро..."
+  },
+  "auth": {
+    "login": "Войти",
+    "register": "Регистрация",
+    "email": "Email",
+    "password": "Пароль",
+    "emailPlaceholder": "Введите ваш email",
+    "passwordPlaceholder": "Введите ваш пароль",
+    "fullName": "Полное имя",
+    "nickname": "Никнейм",
+    "phone": "Телефон",
+    "country": "Страна",
+    "gender": "Пол",
+    "businessType": "Тип бизнеса",
+    "selectGender": "Выберите пол",
+    "male": "Мужской",
+    "female": "Женский",
+    "other": "Другой",
+    "general": "Общий",
+    "retail": "Розница",
+    "ecommerce": "Электронная коммерция",
+    "service": "Услуги",
+    "loading": "Загрузка...",
+    "noAccount": "Нет аккаунта?",
+    "haveAccount": "Уже есть аккаунт?",
+    "logout": "Выйти"
+  },
+  "profile": {
+    "title": "Профиль",
+    "personalInfo": "Личная информация",
+    "businessInfo": "Информация о бизнесе",
+    "emailCannotChange": "Email нельзя изменить",
+    "save": "Сохранить изменения",
+    "saving": "Сохранение...",
+    "updateSuccess": "Профиль успешно обновлен"
+  }
+}
+
