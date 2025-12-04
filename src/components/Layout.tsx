@@ -88,9 +88,6 @@ export function Layout() {
             <XMarkIcon className="h-6 w-6" />
           </button>
         </div>
-        <div className="mb-6 text-sm font-semibold tracking-tight text-gray-200 flex justify-center">
-          <img src='https://alfabank.servicecdn.ru/site-upload/31/99/10565/D_red_logo.svg'/>
-        </div>
         
         <nav className="space-y-2 text-xs text-gray-500">
           <Link

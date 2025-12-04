@@ -62,19 +62,19 @@ export function LandingPage() {
 
   return (
     <div className="flex flex-1 items-center">
-      <div className="w-full px-10 sm:px-24">
-        <div className="surface-card mx-auto max-w-3xl rounded-3xl px-8 py-12 text-center sm:px-12 sm:py-16 space-y-10">
+      <div className="w-full px-4 sm:px-10 lg:px-24">
+        <div className="surface-card mx-auto max-w-3xl rounded-3xl px-4 py-8 text-center sm:px-8 sm:py-12 lg:px-12 lg:py-16 space-y-6 sm:space-y-10">
           <div className="space-y-2">
-            <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+            <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl lg:text-4xl">
               {t('landing.title')}
             </h1>
-            <p className="text-sm text-gray-500 sm:text-[15px]">
+            <p className="text-xs text-gray-500 sm:text-sm lg:text-[15px]">
               {t('landing.subtitle')}
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="mt-8 px-4 sm:px-8">
-            <div className="flex items-center gap-3">
+          <form onSubmit={handleSubmit} className="mt-6 sm:mt-8 px-2 sm:px-4 lg:px-8">
+            <div className="flex items-center gap-2 sm:gap-3 min-w-0">
               <input
                 type="text"
                 value={input}
@@ -82,16 +82,16 @@ export function LandingPage() {
                 onKeyDown={handleKeyDown}
                 placeholder={t('landing.placeholder')}
                 disabled={isLoading}
-                className="surface-input flex-1 rounded-2xl px-6 py-4 text-base shadow-sm placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#AD2023]/60 sm:text-lg border disabled:opacity-50"
+                className="surface-input flex-1 min-w-0 rounded-2xl px-4 py-3 text-sm shadow-sm placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#AD2023]/60 sm:px-6 sm:py-4 sm:text-base lg:text-lg border disabled:opacity-50"
                 autoFocus
               />
               <button
                 type="submit"
                 disabled={!input.trim() || isLoading}
-                className="flex items-center justify-center rounded-xl bg-[#AD2023] p-4 text-white hover:bg-[#AD2023]/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="flex shrink-0 items-center justify-center rounded-xl bg-[#AD2023] p-3 text-white hover:bg-[#AD2023]/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors sm:p-4"
                 aria-label={t('chat.send')}
               >
-                <PaperAirplaneIcon className="h-6 w-6" />
+                <PaperAirplaneIcon className="h-5 w-5 sm:h-6 sm:w-6" />
               </button>
             </div>
           </form>
