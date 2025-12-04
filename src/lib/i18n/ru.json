@@ -57,6 +57,7 @@
     "gender": "Пол",
     "businessType": "Тип бизнеса",
     "selectGender": "Выберите пол",
+    "selectBusinessType": "Выберите тип бизнеса",
     "male": "Мужской",
     "female": "Женский",
     "other": "Другой",

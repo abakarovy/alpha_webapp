@@ -188,18 +188,17 @@ export function ProfilePage() {
                 <label htmlFor="gender" className="mb-2 block text-sm text-gray-500">
                   {t('auth.gender')}
                 </label>
-                <select
+                <CustomSelect
                   id="gender"
-                  name="gender"
                   value={formData.gender}
-                  onChange={handleChange}
-                  className="surface-input w-full rounded-lg px-4 py-2 text-sm border focus:outline-none focus:ring-2 focus:ring-[#AD2023]/50"
-                >
-                  <option value="">{t('auth.selectGender')}</option>
-                  <option value="male">{t('auth.male')}</option>
-                  <option value="female">{t('auth.female')}</option>
-                  <option value="other">{t('auth.other')}</option>
-                </select>
+                  onChange={(value) => setFormData((prev) => ({ ...prev, gender: value }))}
+                  placeholder={t('auth.selectGender')}
+                  options={[
+                    { value: 'male', label: t('auth.male') },
+                    { value: 'female', label: t('auth.female') },
+                    { value: 'other', label: t('auth.other') },
+                  ]}
+                />
               </div>
             </div>
 
@@ -210,18 +209,18 @@ export function ProfilePage() {
                 <label htmlFor="business_type" className="mb-2 block text-sm text-gray-500">
                   {t('auth.businessType')}
                 </label>
-                <select
+                <CustomSelect
                   id="business_type"
-                  name="business_type"
                   value={formData.business_type}
-                  onChange={handleChange}
-                  className="surface-input w-full rounded-lg px-4 py-2 text-sm border focus:outline-none focus:ring-2 focus:ring-[#AD2023]/50"
-                >
-                  <option value="general">{t('auth.general')}</option>
-                  <option value="retail">{t('auth.retail')}</option>
-                  <option value="ecommerce">{t('auth.ecommerce')}</option>
-                  <option value="service">{t('auth.service')}</option>
-                </select>
+                  onChange={(value) => setFormData((prev) => ({ ...prev, business_type: value }))}
+                  placeholder={t('auth.selectBusinessType')}
+                  options={[
+                    { value: 'general', label: t('auth.general') },
+                    { value: 'retail', label: t('auth.retail') },
+                    { value: 'ecommerce', label: t('auth.ecommerce') },
+                    { value: 'service', label: t('auth.service') },
+                  ]}
+                />
               </div>
             </div>
 

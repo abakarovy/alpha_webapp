@@ -57,6 +57,7 @@
     "gender": "Gender",
     "businessType": "Business Type",
     "selectGender": "Select gender",
+    "selectBusinessType": "Select business type",
     "male": "Male",
     "female": "Female",
     "other": "Other",
