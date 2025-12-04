@@ -52,6 +52,24 @@ export interface UserProfile {
   gender?: string | null;
 }
 
+export interface ConversationContext {
+  user_role?: 'owner' | 'marketer' | 'accountant' | 'beginner';
+  business_stage?: 'startup' | 'stable' | 'scaling';
+  goal?: 'increase_revenue' | 'reduce_costs' | 'hire_staff' | 'launch_ads' | 'legal_help';
+  urgency?: 'urgent' | 'normal' | 'planning';
+  region?: string;
+  business_niche?: 'retail' | 'services' | 'food_service' | 'manufacturing' | 'online_services';
+}
+
+export interface ContextFilters {
+  user_role?: string;
+  business_stage?: string;
+  goal?: string;
+  urgency?: string;
+  region?: string;
+  business_niche?: string;
+}
+
 export interface ChatMessageRequest {
   message: string;
   user_id: string;
@@ -64,6 +82,7 @@ export interface ChatMessageRequest {
     rows: string[][];
   };
   language?: 'en' | 'ru';
+  context_filters?: ContextFilters;
 }
 
 export interface ChatMessageResponse {
@@ -86,6 +105,7 @@ export interface Conversation {
   user_id: string;
   title: string | null;
   created_at: string;
+  context?: ConversationContext | null;
 }
 
 export interface ConversationsResponse {
@@ -204,7 +224,51 @@ export const authApi = {
   },
 };
 
+export interface CreateConversationRequest {
+  user_id: string;
+  title?: string;
+  context?: ConversationContext;
+}
+
+export interface CreateConversationResponse {
+  conversation_id: string;
+  created_at: string;
+}
+
+export interface UpdateContextRequest {
+  user_role?: string;
+  business_stage?: string;
+  goal?: string;
+  urgency?: string;
+  region?: string;
+  business_niche?: string;
+}
+
+export interface UpdateContextResponse {
+  status: string;
+}
+
 export const chatApi = {
+  createConversation: async (data: CreateConversationRequest): Promise<CreateConversationResponse> => {
+    return apiRequest<CreateConversationResponse>('/api/chat/conversations', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  },
+
+  updateConversationContext: async (
+    conversationId: string,
+    data: UpdateContextRequest
+  ): Promise<UpdateContextResponse> => {
+    return apiRequest<UpdateContextResponse>(
+      `/api/chat/conversations/${conversationId}/context`,
+      {
+        method: 'PUT',
+        body: JSON.stringify(data),
+      }
+    );
+  },
+
   sendMessage: async (data: ChatMessageRequest): Promise<ChatMessageResponse> => {
     return apiRequest<ChatMessageResponse>('/api/chat/message', {
       method: 'POST',

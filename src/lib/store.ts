@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { nanoid } from 'nanoid';
-import { chatApi, type Message as ApiMessage, type Conversation as ApiConversation } from './api';
+import { chatApi, type Message as ApiMessage, type Conversation as ApiConversation, type ConversationContext } from './api';
 import { useAuthStore } from './auth-store';
 
 export interface MessageFile {
@@ -27,13 +27,14 @@ export interface Conversation {
   lastMessage: string;
   updatedAt: number;
   messages: Message[];
+  context?: ConversationContext | null;
 }
 
 interface ConversationStore {
   conversations: Conversation[];
   isLoading: boolean;
   error: string | null;
-  addConversation: (id: string, title: string, lastMessage: string) => void;
+  addConversation: (id: string, title: string, lastMessage: string, context?: ConversationContext) => void;
   updateConversation: (id: string, lastMessage: string) => void;
   deleteConversation: (id: string) => Promise<void>;
   getConversationMessages: (id: string) => Message[];
@@ -41,6 +42,7 @@ interface ConversationStore {
   syncConversations: () => Promise<void>;
   syncConversationHistory: (conversationId: string) => Promise<void>;
   updateConversationTitle: (conversationId: string, title: string) => Promise<void>;
+  updateConversationContext: (conversationId: string, context: ConversationContext) => Promise<void>;
 }
 
 function apiMessageToLocal(apiMsg: ApiMessage, attachments?: Array<{ message_id: string; files: MessageFile[] }>): Message {
@@ -63,6 +65,7 @@ function apiConversationToLocal(apiConv: ApiConversation): Conversation {
     lastMessage: '',
     updatedAt: new Date(apiConv.created_at).getTime(),
     messages: [],
+    context: apiConv.context || null,
   };
 }
 
@@ -174,14 +177,14 @@ export const useConversationStore = create<ConversationStore>()(
         }
       },
 
-      addConversation: (id, title, lastMessage) =>
+      addConversation: (id, title, lastMessage, context) =>
         set((state) => {
           const existingIndex = state.conversations.findIndex((conv) => conv.id === id);
           
           if (existingIndex !== -1) {
             const updated = state.conversations.map((conv, idx) =>
               idx === existingIndex
-                ? { ...conv, title, lastMessage, updatedAt: Date.now() }
+                ? { ...conv, title, lastMessage, updatedAt: Date.now(), context: context || conv.context }
                 : conv
             );
             return {
@@ -204,6 +207,7 @@ export const useConversationStore = create<ConversationStore>()(
                 lastMessage,
                 updatedAt: Date.now(),
                 messages: [initialMessage],
+                context: context || null,
               },
               ...state.conversations,
             ],
@@ -313,6 +317,29 @@ export const useConversationStore = create<ConversationStore>()(
           set((state) => ({
             conversations: state.conversations.map((conv) =>
               conv.id === conversationId ? { ...conv, title } : conv
+            ),
+          }));
+        } catch (error) {
+          throw error;
+        }
+      },
+
+      updateConversationContext: async (conversationId: string, context: ConversationContext) => {
+        const authStore = useAuthStore.getState();
+        if (!authStore.user) {
+          set((state) => ({
+            conversations: state.conversations.map((conv) =>
+              conv.id === conversationId ? { ...conv, context } : conv
+            ),
+          }));
+          return;
+        }
+
+        try {
+          await chatApi.updateConversationContext(conversationId, context);
+          set((state) => ({
+            conversations: state.conversations.map((conv) =>
+              conv.id === conversationId ? { ...conv, context } : conv
             ),
           }));
         } catch (error) {

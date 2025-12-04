@@ -2,18 +2,26 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { nanoid } from 'nanoid';
 import { PaperAirplaneIcon } from '@heroicons/react/24/solid';
+import { Cog6ToothIcon } from '@heroicons/react/24/outline';
 import { useConversationStore } from '../lib/store';
 import { useAuthStore } from '../lib/auth-store';
-import { chatApi } from '../lib/api';
+import { chatApi, type ConversationContext } from '../lib/api';
 import { useTranslation } from '../hooks/useTranslation';
+import { ContextModal } from '../components/ContextModal';
 
 export function LandingPage() {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isContextModalOpen, setIsContextModalOpen] = useState(false);
+  const [context, setContext] = useState<ConversationContext | undefined>(undefined);
   const navigate = useNavigate();
-  const { addConversation, addMessage } = useConversationStore();
+  const { addConversation } = useConversationStore();
   const user = useAuthStore((state) => state.user);
-  const { t, language } = useTranslation();
+  const { t } = useTranslation();
+
+  const handleContextSave = (newContext: ConversationContext) => {
+    setContext(newContext);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,29 +33,32 @@ export function LandingPage() {
     }
     
     const message = input.trim();
-    const chatId = nanoid();
     const title = message.length > 30 ? message.substring(0, 30) + '...' : message;
     
     setIsLoading(true);
     
     try {
-      const response = await chatApi.sendMessage({
-        message,
-        user_id: user.id,
-        language: language,
-      });
+      let conversationId: string;
       
-      const actualChatId = response.conversation_id;
+      if (context && Object.keys(context).length > 0) {
+        const createResponse = await chatApi.createConversation({
+          user_id: user.id,
+          title,
+          context,
+        });
+        conversationId = createResponse.conversation_id;
+      } else {
+        conversationId = nanoid();
+      }
+
+      addConversation(conversationId, title, message, context);
       
-      addConversation(actualChatId, title, message);
-      addMessage(actualChatId, 'assistant', response.response, response.files);
-      
-      await new Promise(resolve => setTimeout(resolve, 50));
-      navigate(`/chat/${actualChatId}`);
+      navigate(`/chat/${conversationId}?message=${encodeURIComponent(message)}`);
     } catch (error) {
-      console.error('Failed to send message:', error);
-      addConversation(chatId, title, message);
-      navigate(`/chat/${chatId}?message=${encodeURIComponent(message)}`);
+      console.error('Failed to create conversation:', error);
+      const fallbackId = nanoid();
+      addConversation(fallbackId, title, message, context);
+      navigate(`/chat/${fallbackId}?message=${encodeURIComponent(message)}`);
     } finally {
       setIsLoading(false);
     }
@@ -75,6 +86,19 @@ export function LandingPage() {
 
           <form onSubmit={handleSubmit} className="mt-6 sm:mt-8 px-2 sm:px-4 lg:px-8">
             <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+              <button
+                type="button"
+                onClick={() => setIsContextModalOpen(true)}
+                className={`flex shrink-0 items-center justify-center rounded-xl p-3 transition-colors sm:p-4 ${
+                  context && Object.keys(context).length > 0
+                    ? 'bg-[#AD2023] text-white'
+                    : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-gray-200'
+                }`}
+                aria-label={t('context.edit')}
+                title={t('context.edit')}
+              >
+                <Cog6ToothIcon className="h-5 w-5 sm:h-6 sm:w-6" />
+              </button>
               <input
                 type="text"
                 value={input}
@@ -97,6 +121,12 @@ export function LandingPage() {
           </form>
         </div>
       </div>
+      <ContextModal
+        isOpen={isContextModalOpen}
+        onClose={() => setIsContextModalOpen(false)}
+        onSave={handleContextSave}
+        initialContext={context}
+      />
     </div>
   );
 }

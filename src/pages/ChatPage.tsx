@@ -4,10 +4,12 @@ import { nanoid } from 'nanoid';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { PaperAirplaneIcon } from '@heroicons/react/24/solid';
+import { Cog6ToothIcon } from '@heroicons/react/24/outline';
 import { useConversationStore, type Message } from '../lib/store';
 import { useAuthStore } from '../lib/auth-store';
-import { chatApi } from '../lib/api';
+import { chatApi, type ConversationContext } from '../lib/api';
 import { useTranslation } from '../hooks/useTranslation';
+import { ContextModal } from '../components/ContextModal';
 
 function removeJsonCodeBlocks(content: string): string {
   return content.replace(/```json[\s\S]*?```/g, '');
@@ -22,7 +24,7 @@ export function ChatPage() {
   
   const user = useAuthStore((state) => state.user);
   const conversations = useConversationStore((state) => state.conversations);
-  const { addMessage, addConversation, syncConversationHistory, isLoading } = useConversationStore();
+  const { addMessage, addConversation, syncConversationHistory, isLoading, updateConversationContext } = useConversationStore();
   
   const currentConversation = conversations.find((conv) => conv.id === chatId);
   const storeMessages = currentConversation?.messages || [];
@@ -30,7 +32,9 @@ export function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isSending, setIsSending] = useState(false);
+  const [isContextModalOpen, setIsContextModalOpen] = useState(false);
   const hasSentInitialRef = useRef(false);
+  const isSendingInitialRef = useRef(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -42,16 +46,33 @@ export function ChatPage() {
   }, [user, navigate]);
 
   const sendInitialMessage = async (messageText: string) => {
-    if (!chatId || !user || isSending) return;
+    if (!chatId || !user || isSending || isSendingInitialRef.current) return;
+    
+    if (hasSentInitialRef.current === false) {
+      hasSentInitialRef.current = true;
+    } else {
+      return;
+    }
 
+    isSendingInitialRef.current = true;
     setIsSending(true);
 
     try {
+      const contextFilters = currentConversation?.context ? {
+        user_role: currentConversation.context.user_role,
+        business_stage: currentConversation.context.business_stage,
+        goal: currentConversation.context.goal,
+        urgency: currentConversation.context.urgency,
+        region: currentConversation.context.region,
+        business_niche: currentConversation.context.business_niche,
+      } : undefined;
+
       const response = await chatApi.sendMessage({
         message: messageText,
         user_id: user.id,
         conversation_id: chatId,
         language: language,
+        context_filters: contextFilters,
       });
 
       const assistantMessage: Message = {
@@ -78,6 +99,7 @@ export function ChatPage() {
       setMessages((prev) => [...prev, errorMessage]);
     } finally {
       setIsSending(false);
+      isSendingInitialRef.current = false;
     }
   };
 
@@ -85,41 +107,54 @@ export function ChatPage() {
     if (!chatId) {
       setMessages([]);
       hasSentInitialRef.current = false;
+      isSendingInitialRef.current = false;
       return;
     }
 
-    hasSentInitialRef.current = false;
-
-    if (storeMessages.length > 0) {
+    const hasAssistantResponse = storeMessages.some(msg => msg.role === 'assistant');
+    
+    if (storeMessages.length > 0 && hasAssistantResponse) {
       setMessages(storeMessages);
       hasSentInitialRef.current = true;
-    } else {
-      if (initialMessage) {
-        const title = initialMessage.length > 30 ? initialMessage.substring(0, 30) + '...' : initialMessage;
-        addConversation(chatId, title, initialMessage);
-        const newMessage: Message = {
-          id: nanoid(),
-          role: 'user',
-          content: initialMessage,
-          timestamp: Date.now(),
-        };
-        setMessages([newMessage]);
-        
-        if (user) {
-          hasSentInitialRef.current = true;
-          setTimeout(() => {
-            sendInitialMessage(initialMessage);
-          }, 0);
-        }
+      setInput('');
+      return;
+    }
+
+    if (initialMessage && !hasSentInitialRef.current) {
+      const userMessage: Message = {
+        id: nanoid(),
+        role: 'user',
+        content: initialMessage,
+        timestamp: Date.now(),
+      };
+      setMessages([userMessage]);
+      
+      if (user) {
+        const messageToSend = initialMessage;
+        setTimeout(() => {
+          sendInitialMessage(messageToSend);
+        }, 100);
+      }
+    } else if (!initialMessage) {
+      if (user) {
+        syncConversationHistory(chatId);
       } else {
-        if (user) {
-          syncConversationHistory(chatId);
-        }
+        setMessages([]);
+        hasSentInitialRef.current = true;
       }
     }
     
     setInput('');
-  }, [chatId, initialMessage, user, storeMessages.length]);
+  }, [chatId, initialMessage, user]);
+
+  useEffect(() => {
+    if (chatId && storeMessages.length > 0) {
+      const hasAssistantResponse = storeMessages.some(msg => msg.role === 'assistant');
+      if (hasAssistantResponse && messages.length > 0 && !messages.some(msg => msg.role === 'assistant')) {
+        setMessages(storeMessages);
+      }
+    }
+  }, [chatId, storeMessages]);
 
   useEffect(() => {
     if (chatId && storeMessages.length > 0) {
@@ -134,6 +169,15 @@ export function ChatPage() {
   useEffect(() => {
     inputRef.current?.focus();
   }, [chatId]);
+
+  const handleContextSave = async (newContext: ConversationContext) => {
+    if (!chatId) return;
+    try {
+      await updateConversationContext(chatId, newContext);
+    } catch (error) {
+      console.error('Failed to update context:', error);
+    }
+  };
 
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -154,11 +198,21 @@ export function ChatPage() {
     addMessage(chatId, 'user', messageText);
 
     try {
+      const contextFilters = currentConversation?.context ? {
+        user_role: currentConversation.context.user_role,
+        business_stage: currentConversation.context.business_stage,
+        goal: currentConversation.context.goal,
+        urgency: currentConversation.context.urgency,
+        region: currentConversation.context.region,
+        business_niche: currentConversation.context.business_niche,
+      } : undefined;
+
       const response = await chatApi.sendMessage({
         message: messageText,
         user_id: user.id,
         conversation_id: chatId,
         language: language,
+        context_filters: contextFilters,
       });
 
       const assistantMessage: Message = {
@@ -351,6 +405,19 @@ export function ChatPage() {
         <div className="mx-auto max-w-3xl">
           <form onSubmit={handleSend}>
             <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => setIsContextModalOpen(true)}
+                className={`flex shrink-0 items-center justify-center rounded-xl p-3 transition-colors ${
+                  currentConversation?.context && Object.keys(currentConversation.context).length > 0
+                    ? 'bg-[#AD2023] text-white'
+                    : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-gray-200'
+                }`}
+                aria-label={t('context.edit')}
+                title={t('context.edit')}
+              >
+                <Cog6ToothIcon className="h-5 w-5" />
+              </button>
               <input
                 ref={inputRef}
                 type="text"
@@ -364,7 +431,7 @@ export function ChatPage() {
               <button
                 type="submit"
                 disabled={!input.trim() || isSending}
-                className="flex items-center justify-center rounded-xl bg-[#AD2023] p-3 text-white hover:bg-[#AD2023]/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="flex shrink-0 items-center justify-center rounded-xl bg-[#AD2023] p-3 text-white hover:bg-[#AD2023]/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 aria-label={t('chat.send')}
               >
                 <PaperAirplaneIcon className="h-5 w-5" />
@@ -373,6 +440,12 @@ export function ChatPage() {
           </form>
         </div>
       </div>
+      <ContextModal
+        isOpen={isContextModalOpen}
+        onClose={() => setIsContextModalOpen(false)}
+        onSave={handleContextSave}
+        initialContext={currentConversation?.context || null}
+      />
     </div>
   );
 }
