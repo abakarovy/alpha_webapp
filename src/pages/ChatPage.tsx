@@ -24,7 +24,7 @@ export function ChatPage() {
   
   const user = useAuthStore((state) => state.user);
   const conversations = useConversationStore((state) => state.conversations);
-  const { addMessage, addConversation, syncConversationHistory, isLoading, updateConversationContext } = useConversationStore();
+  const { addMessage, syncConversationHistory, isLoading, updateConversationContext } = useConversationStore();
   
   const currentConversation = conversations.find((conv) => conv.id === chatId);
   const storeMessages = currentConversation?.messages || [];
