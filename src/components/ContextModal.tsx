@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from '../hooks/useTranslation';
 import type { ConversationContext } from '../lib/api';
+import { CustomSelect } from './CustomSelect';
 
 interface ContextModalProps {
   isOpen: boolean;
@@ -72,88 +73,91 @@ export function ContextModal({ isOpen, onClose, onSave, initialContext }: Contex
         <div className="space-y-4">
           <div>
             <label className="mb-2 block text-sm font-medium">{t('context.userRole')}</label>
-            <select
+            <CustomSelect
               value={context.user_role || ''}
-              onChange={(e) => setContext({ ...context, user_role: e.target.value as any || undefined })}
-              className="surface-input w-full rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#AD2023]/50"
-            >
-              <option value="">{t('context.selectUserRole')}</option>
-              <option value="owner">{t('context.owner')}</option>
-              <option value="marketer">{t('context.marketer')}</option>
-              <option value="accountant">{t('context.accountant')}</option>
-              <option value="beginner">{t('context.beginner')}</option>
-            </select>
+              onChange={(value) => setContext({ ...context, user_role: (value || undefined) as any })}
+              placeholder={t('context.selectUserRole')}
+              options={[
+                { value: 'owner', label: t('context.owner') },
+                { value: 'marketer', label: t('context.marketer') },
+                { value: 'accountant', label: t('context.accountant') },
+                { value: 'beginner', label: t('context.beginner') },
+              ]}
+            />
           </div>
 
           <div>
             <label className="mb-2 block text-sm font-medium">{t('context.businessStage')}</label>
-            <select
+            <CustomSelect
               value={context.business_stage || ''}
-              onChange={(e) => setContext({ ...context, business_stage: e.target.value as any || undefined })}
-              className="surface-input w-full rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#AD2023]/50"
-            >
-              <option value="">{t('context.selectBusinessStage')}</option>
-              <option value="startup">{t('context.startup')}</option>
-              <option value="stable">{t('context.stable')}</option>
-              <option value="scaling">{t('context.scaling')}</option>
-            </select>
+              onChange={(value) => setContext({ ...context, business_stage: (value || undefined) as any })}
+              placeholder={t('context.selectBusinessStage')}
+              options={[
+                { value: 'startup', label: t('context.startup') },
+                { value: 'stable', label: t('context.stable') },
+                { value: 'scaling', label: t('context.scaling') },
+              ]}
+            />
           </div>
 
           <div>
             <label className="mb-2 block text-sm font-medium">{t('context.goal')}</label>
-            <select
+            <CustomSelect
               value={context.goal || ''}
-              onChange={(e) => setContext({ ...context, goal: e.target.value as any || undefined })}
-              className="surface-input w-full rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#AD2023]/50"
-            >
-              <option value="">{t('context.selectGoal')}</option>
-              <option value="increase_revenue">{t('context.increaseRevenue')}</option>
-              <option value="reduce_costs">{t('context.reduceCosts')}</option>
-              <option value="hire_staff">{t('context.hireStaff')}</option>
-              <option value="launch_ads">{t('context.launchAds')}</option>
-              <option value="legal_help">{t('context.legalHelp')}</option>
-            </select>
+              onChange={(value) => setContext({ ...context, goal: (value || undefined) as any })}
+              placeholder={t('context.selectGoal')}
+              options={[
+                { value: 'increase_revenue', label: t('context.increaseRevenue') },
+                { value: 'reduce_costs', label: t('context.reduceCosts') },
+                { value: 'hire_staff', label: t('context.hireStaff') },
+                { value: 'launch_ads', label: t('context.launchAds') },
+                { value: 'legal_help', label: t('context.legalHelp') },
+              ]}
+            />
           </div>
 
           <div>
             <label className="mb-2 block text-sm font-medium">{t('context.urgency')}</label>
-            <select
+            <CustomSelect
               value={context.urgency || ''}
-              onChange={(e) => setContext({ ...context, urgency: e.target.value as any || undefined })}
-              className="surface-input w-full rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#AD2023]/50"
-            >
-              <option value="">{t('context.selectUrgency')}</option>
-              <option value="urgent">{t('context.urgent')}</option>
-              <option value="normal">{t('context.normal')}</option>
-              <option value="planning">{t('context.planning')}</option>
-            </select>
+              onChange={(value) => setContext({ ...context, urgency: (value || undefined) as any })}
+              placeholder={t('context.selectUrgency')}
+              options={[
+                { value: 'urgent', label: t('context.urgent') },
+                { value: 'normal', label: t('context.normal') },
+                { value: 'planning', label: t('context.planning') },
+              ]}
+            />
           </div>
 
           <div>
             <label className="mb-2 block text-sm font-medium">{t('context.region')}</label>
-            <input
-              type="text"
+            <CustomSelect
               value={context.region || ''}
-              onChange={(e) => setContext({ ...context, region: e.target.value })}
-              placeholder="Москва"
-              className="surface-input w-full rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#AD2023]/50"
+              onChange={(value) => setContext({ ...context, region: value })}
+              placeholder={t('context.selectRegion')}
+              options={[
+                { value: 'russia', label: t('auth.russia') },
+                { value: 'america', label: t('auth.america') },
+                { value: 'britain', label: t('auth.britain') },
+              ]}
             />
           </div>
 
           <div>
             <label className="mb-2 block text-sm font-medium">{t('context.businessNiche')}</label>
-            <select
+            <CustomSelect
               value={context.business_niche || ''}
-              onChange={(e) => setContext({ ...context, business_niche: e.target.value as any || undefined })}
-              className="surface-input w-full rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#AD2023]/50"
-            >
-              <option value="">{t('context.selectBusinessNiche')}</option>
-              <option value="retail">{t('context.retail')}</option>
-              <option value="services">{t('context.services')}</option>
-              <option value="food_service">{t('context.foodService')}</option>
-              <option value="manufacturing">{t('context.manufacturing')}</option>
-              <option value="online_services">{t('context.onlineServices')}</option>
-            </select>
+              onChange={(value) => setContext({ ...context, business_niche: (value || undefined) as any })}
+              placeholder={t('context.selectBusinessNiche')}
+              options={[
+                { value: 'retail', label: t('context.retail') },
+                { value: 'services', label: t('context.services') },
+                { value: 'food_service', label: t('context.foodService') },
+                { value: 'manufacturing', label: t('context.manufacturing') },
+                { value: 'online_services', label: t('context.onlineServices') },
+              ]}
+            />
           </div>
         </div>
 

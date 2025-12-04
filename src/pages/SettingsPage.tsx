@@ -1,14 +1,15 @@
 import { useI18nStore } from '../lib/i18n-store';
+import { useThemeStore } from '../lib/theme-store';
 import { useTranslation } from '../hooks/useTranslation';
 import type { Language } from '../lib/i18n';
+import { CustomSelect } from '../components/CustomSelect';
 
 export function SettingsPage() {
   const { t, language } = useTranslation();
   const setLanguage = useI18nStore((state) => state.setLanguage);
+  const theme = useThemeStore((state) => state.theme);
+  const setTheme = useThemeStore((state) => state.setTheme);
 
-  const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setLanguage(e.target.value as Language);
-  };
 
   return (
     <div className="chat-shell flex h-full flex-col">
@@ -26,24 +27,36 @@ export function SettingsPage() {
                 <label htmlFor="language-select" className="mb-2 block text-sm text-gray-500">
                   {t('settings.selectLanguage')}
                 </label>
-                <select
+                <CustomSelect
                   id="language-select"
                   value={language}
-                  onChange={handleLanguageChange}
-                  className="surface-input rounded-lg border px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#AD2023]/50"
-                >
-                  <option value="en">English</option>
-                  <option value="ru">Русский</option>
-                </select>
+                  onChange={(value) => setLanguage(value as Language)}
+                  options={[
+                    { value: 'en', label: 'English' },
+                    { value: 'ru', label: 'Русский' },
+                  ]}
+                />
               </div>
             </div>
             <div className="surface-card rounded-xl px-6 py-5">
               <h2 className="mb-3 text-lg font-medium">
                 {t('settings.appearance')}
               </h2>
-              <p className="text-sm text-gray-500">
-                {t('settings.appearanceComingSoon')}
-              </p>
+              <div className="mt-4">
+                <label htmlFor="theme-select" className="mb-2 block text-sm text-gray-500">
+                  {t('settings.selectTheme')}
+                </label>
+                <CustomSelect
+                  id="theme-select"
+                  value={theme}
+                  onChange={(value) => setTheme(value as 'light' | 'dark' | 'system')}
+                  options={[
+                    { value: 'light', label: t('settings.light') },
+                    { value: 'dark', label: t('settings.dark') },
+                    { value: 'system', label: t('settings.system') },
+                  ]}
+                />
+              </div>
             </div>
             <div className="surface-card rounded-xl px-6 py-5">
               <h2 className="mb-3 text-lg font-medium">

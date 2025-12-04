@@ -92,7 +92,7 @@ export function LandingPage() {
                 className={`flex shrink-0 items-center justify-center rounded-xl p-3 transition-colors sm:p-4 ${
                   context && Object.keys(context).length > 0
                     ? 'bg-[#AD2023] text-white'
-                    : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-gray-200'
+                    : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-gray-200 context-button'
                 }`}
                 aria-label={t('context.edit')}
                 title={t('context.edit')}
@@ -112,7 +112,7 @@ export function LandingPage() {
               <button
                 type="submit"
                 disabled={!input.trim() || isLoading}
-                className="flex shrink-0 items-center justify-center rounded-xl bg-[#AD2023] p-3 text-white hover:bg-[#AD2023]/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors sm:p-4"
+                className="send-button flex shrink-0 items-center justify-center rounded-xl bg-[#AD2023] p-3 text-white hover:bg-[#AD2023]/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors sm:p-4"
                 aria-label={t('chat.send')}
               >
                 <PaperAirplaneIcon className="h-5 w-5 sm:h-6 sm:w-6" />

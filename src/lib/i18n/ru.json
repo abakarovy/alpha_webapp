@@ -9,7 +9,7 @@
   },
   "landing": {
     "title": "Smile AI",
-    "subtitle": "Ваш бизнес-ассистент. Бэкенд и AI будут подключены позже.",
+    "subtitle": "Ваш бизнес-ассистент.",
     "placeholder": "Спросите что-нибудь о вашем бизнесе..."
   },
   "chat": {
@@ -17,6 +17,7 @@
     "emptySubtitle": "Отправьте сообщение, чтобы начать общение",
     "inputPlaceholder": "Введите ваше сообщение...",
     "send": "Отправить",
+    "stop": "Остановить",
     "placeholderResponse": "Это заглушка ответа. Интеграция с бэкендом скоро будет добавлена.",
     "download": "Скачать"
   },
@@ -27,7 +28,12 @@
     "language": "Язык",
     "appearanceComingSoon": "Настройки темы скоро...",
     "accountComingSoon": "Настройки аккаунта скоро...",
-    "selectLanguage": "Выберите язык"
+    "selectLanguage": "Выберите язык",
+    "theme": "Тема",
+    "selectTheme": "Выберите тему",
+    "light": "Светлая",
+    "dark": "Темная",
+    "system": "Системная"
   },
   "templates": {
     "title": "Шаблоны",
@@ -44,6 +50,10 @@
     "nickname": "Никнейм",
     "phone": "Телефон",
     "country": "Страна",
+    "selectCountry": "Выберите страну",
+    "russia": "Россия",
+    "america": "Америка",
+    "britain": "Британия",
     "gender": "Пол",
     "businessType": "Тип бизнеса",
     "selectGender": "Выберите пол",
@@ -76,6 +86,7 @@
     "goal": "Цель",
     "urgency": "Срочность",
     "region": "Регион",
+    "selectRegion": "Выберите регион",
     "businessNiche": "Ниша бизнеса",
     "selectUserRole": "Выберите вашу роль",
     "selectBusinessStage": "Выберите стадию бизнеса",

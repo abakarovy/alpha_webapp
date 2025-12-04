@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuthStore } from '../lib/auth-store';
 import { useTranslation } from '../hooks/useTranslation';
+import { CustomSelect } from '../components/CustomSelect';
 
 export function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -137,13 +138,16 @@ export function RegisterPage() {
             <label htmlFor="country" className="mb-1 block text-xs font-medium">
               {t('auth.country')}
             </label>
-            <input
+            <CustomSelect
               id="country"
-              name="country"
-              type="text"
               value={formData.country}
-              onChange={handleChange}
-              className="surface-input w-full rounded-lg border px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#AD2023]/50"
+              onChange={(value) => setFormData({ ...formData, country: value })}
+              placeholder={t('auth.selectCountry')}
+              options={[
+                { value: 'russia', label: t('auth.russia') },
+                { value: 'america', label: t('auth.america') },
+                { value: 'britain', label: t('auth.britain') },
+              ]}
             />
           </div>
 

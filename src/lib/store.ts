@@ -144,16 +144,25 @@ export const useConversationStore = create<ConversationStore>()(
               };
             }
 
-            const mergedMessages = apiMessages.map((apiMsg) => {
-              const existingMsg = existingConv.messages.find((msg) => msg.id === apiMsg.id);
-              if (existingMsg && existingMsg.files && existingMsg.files.length > 0) {
-                return {
-                  ...apiMsg,
-                  files: (apiMsg.files && apiMsg.files.length > 0) ? apiMsg.files : existingMsg.files,
-                };
+            const localMessageIds = new Set(existingConv.messages.map(m => m.id));
+            
+            const mergedMessages = [...existingConv.messages];
+            apiMessages.forEach((apiMsg) => {
+              if (!localMessageIds.has(apiMsg.id)) {
+                mergedMessages.push(apiMsg);
+              } else {
+                const existingIndex = mergedMessages.findIndex(m => m.id === apiMsg.id);
+                if (existingIndex >= 0) {
+                  const existingMsg = mergedMessages[existingIndex];
+                  mergedMessages[existingIndex] = {
+                    ...apiMsg,
+                    files: (apiMsg.files && apiMsg.files.length > 0) ? apiMsg.files : existingMsg.files,
+                  };
+                }
               }
-              return apiMsg;
             });
+            
+            mergedMessages.sort((a, b) => a.timestamp - b.timestamp);
 
             return {
               conversations: state.conversations.map((conv) =>
@@ -161,7 +170,7 @@ export const useConversationStore = create<ConversationStore>()(
                   ? {
                       ...conv,
                       messages: mergedMessages,
-                      lastMessage: mergedMessages.length > 0 ? mergedMessages[mergedMessages.length - 1].content : '',
+                      lastMessage: mergedMessages.length > 0 ? mergedMessages[mergedMessages.length - 1].content : conv.lastMessage,
                       updatedAt: mergedMessages.length > 0 ? mergedMessages[mergedMessages.length - 1].timestamp : conv.updatedAt,
                     }
                   : conv

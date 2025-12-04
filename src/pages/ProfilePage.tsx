@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuthStore } from '../lib/auth-store';
 import { authApi, type UserProfile } from '../lib/api';
 import { useTranslation } from '../hooks/useTranslation';
+import { CustomSelect } from '../components/CustomSelect';
 
 export function ProfilePage() {
   const { user, token, updateProfile: updateAuthProfile } = useAuthStore();
@@ -72,6 +73,10 @@ export function ProfilePage() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleCountryChange = (value: string) => {
+    setFormData((prev) => ({ ...prev, country: value }));
   };
 
   if (isLoading) {
@@ -166,13 +171,16 @@ export function ProfilePage() {
                 <label htmlFor="country" className="mb-2 block text-sm text-gray-500">
                   {t('auth.country')}
                 </label>
-                <input
-                  type="text"
+                <CustomSelect
                   id="country"
-                  name="country"
                   value={formData.country}
-                  onChange={handleChange}
-                  className="surface-input w-full rounded-lg px-4 py-2 text-sm border focus:outline-none focus:ring-2 focus:ring-[#AD2023]/50"
+                  onChange={handleCountryChange}
+                  placeholder={t('auth.selectCountry')}
+                  options={[
+                    { value: 'russia', label: t('auth.russia') },
+                    { value: 'america', label: t('auth.america') },
+                    { value: 'britain', label: t('auth.britain') },
+                  ]}
                 />
               </div>
 

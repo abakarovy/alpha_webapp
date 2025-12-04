@@ -4,12 +4,13 @@ import { nanoid } from 'nanoid';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { PaperAirplaneIcon } from '@heroicons/react/24/solid';
-import { Cog6ToothIcon } from '@heroicons/react/24/outline';
+import { Cog6ToothIcon, StopIcon } from '@heroicons/react/24/outline';
 import { useConversationStore, type Message } from '../lib/store';
 import { useAuthStore } from '../lib/auth-store';
 import { chatApi, type ConversationContext } from '../lib/api';
 import { useTranslation } from '../hooks/useTranslation';
 import { ContextModal } from '../components/ContextModal';
+import { TypewriterMessage } from '../components/TypewriterMessage';
 
 function removeJsonCodeBlocks(content: string): string {
   return content.replace(/```json[\s\S]*?```/g, '');
@@ -27,14 +28,18 @@ export function ChatPage() {
   const { addMessage, syncConversationHistory, isLoading, updateConversationContext } = useConversationStore();
   
   const currentConversation = conversations.find((conv) => conv.id === chatId);
-  const storeMessages = currentConversation?.messages || [];
+  const storeMessages = React.useMemo(() => currentConversation?.messages || [], [currentConversation]);
   
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isSending, setIsSending] = useState(false);
   const [isContextModalOpen, setIsContextModalOpen] = useState(false);
+  const [typingMessageId, setTypingMessageId] = useState<string | null>(null);
+  const [isTypingStopped, setIsTypingStopped] = useState(false);
   const hasSentInitialRef = useRef(false);
   const isSendingInitialRef = useRef(false);
+  const isSyncingRef = useRef(false);
+  const justAddedMessageRef = useRef<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -46,11 +51,9 @@ export function ChatPage() {
   }, [user, navigate]);
 
   const sendInitialMessage = async (messageText: string) => {
-    if (!chatId || !user || isSending || isSendingInitialRef.current) return;
+    if (!chatId || !user || isSending) return;
     
-    if (hasSentInitialRef.current === false) {
-      hasSentInitialRef.current = true;
-    } else {
+    if (isSendingInitialRef.current) {
       return;
     }
 
@@ -83,11 +86,23 @@ export function ChatPage() {
         files: response.files && response.files.length > 0 ? response.files : undefined,
       };
 
-      setMessages((prev) => [...prev, assistantMessage]);
+      setTypingMessageId(response.message_id);
+      setIsTypingStopped(false);
+      justAddedMessageRef.current = response.message_id;
+      
+      setMessages((prev) => {
+        const existingIds = new Set(prev.map(m => m.id));
+        if (existingIds.has(response.message_id)) {
+          return prev;
+        }
+        return [...prev, assistantMessage];
+      });
+      
       addMessage(chatId, 'assistant', response.response, response.files);
-
-      await new Promise(resolve => setTimeout(resolve, 100));
-      await syncConversationHistory(chatId);
+      
+      setTimeout(() => {
+        justAddedMessageRef.current = null;
+      }, 2000);
     } catch (error) {
       console.error('Failed to send initial message:', error);
       const errorMessage: Message = {
@@ -108,34 +123,52 @@ export function ChatPage() {
       setMessages([]);
       hasSentInitialRef.current = false;
       isSendingInitialRef.current = false;
+      setTypingMessageId(null);
+      setIsTypingStopped(false);
       return;
     }
 
     const hasAssistantResponse = storeMessages.some(msg => msg.role === 'assistant');
-    
-    if (storeMessages.length > 0 && hasAssistantResponse) {
+    const userMessageInStore = storeMessages.find(msg => msg.role === 'user' && msg.content === initialMessage);
+
+    if (initialMessage && !hasSentInitialRef.current && !hasAssistantResponse) {
+      if (userMessageInStore) {
+        setMessages(storeMessages);
+      } else {
+        const userMessage: Message = {
+          id: nanoid(),
+          role: 'user',
+          content: initialMessage,
+          timestamp: Date.now(),
+        };
+        setMessages([userMessage]);
+      }
+      hasSentInitialRef.current = true;
+      
+      if (user && !isSendingInitialRef.current && !userMessageInStore) {
+        addMessage(chatId, 'user', initialMessage);
+        const messageToSend = initialMessage;
+        setTimeout(() => {
+          sendInitialMessage(messageToSend);
+        }, 200);
+      } else if (user && !isSendingInitialRef.current && userMessageInStore && !hasAssistantResponse) {
+        const messageToSend = initialMessage;
+        setTimeout(() => {
+          sendInitialMessage(messageToSend);
+        }, 200);
+      }
+      setInput('');
+      return;
+    }
+
+    if (storeMessages.length > 0 && !initialMessage) {
       setMessages(storeMessages);
       hasSentInitialRef.current = true;
       setInput('');
       return;
     }
 
-    if (initialMessage && !hasSentInitialRef.current) {
-      const userMessage: Message = {
-        id: nanoid(),
-        role: 'user',
-        content: initialMessage,
-        timestamp: Date.now(),
-      };
-      setMessages([userMessage]);
-      
-      if (user) {
-        const messageToSend = initialMessage;
-        setTimeout(() => {
-          sendInitialMessage(messageToSend);
-        }, 100);
-      }
-    } else if (!initialMessage) {
+    if (!initialMessage) {
       if (user) {
         syncConversationHistory(chatId);
       } else {
@@ -145,22 +178,39 @@ export function ChatPage() {
     }
     
     setInput('');
-  }, [chatId, initialMessage, user]);
+  }, [chatId, initialMessage, user, storeMessages]);
 
   useEffect(() => {
-    if (chatId && storeMessages.length > 0) {
-      const hasAssistantResponse = storeMessages.some(msg => msg.role === 'assistant');
-      if (hasAssistantResponse && messages.length > 0 && !messages.some(msg => msg.role === 'assistant')) {
-        setMessages(storeMessages);
-      }
+    if (!chatId || isSending || isSyncingRef.current || typingMessageId || initialMessage || justAddedMessageRef.current) return;
+    
+    if (storeMessages.length > 0) {
+      setMessages((prevMessages) => {
+        if (prevMessages.length === 0) {
+          return storeMessages;
+        }
+        
+        const localMessageIds = new Set(prevMessages.map(m => m.id));
+        const storeMessageIds = new Set(storeMessages.map(m => m.id));
+        
+        const allLocalInStore = prevMessages.every(m => storeMessageIds.has(m.id));
+        const storeHasNewMessages = storeMessages.some(m => !localMessageIds.has(m.id));
+        
+        if (storeHasNewMessages && allLocalInStore) {
+          return storeMessages;
+        } else if (storeHasNewMessages && !allLocalInStore) {
+          const merged = [...prevMessages];
+          storeMessages.forEach(storeMsg => {
+            if (!localMessageIds.has(storeMsg.id)) {
+              merged.push(storeMsg);
+            }
+          });
+          merged.sort((a, b) => a.timestamp - b.timestamp);
+          return merged;
+        }
+        return prevMessages;
+      });
     }
-  }, [chatId, storeMessages]);
-
-  useEffect(() => {
-    if (chatId && storeMessages.length > 0) {
-      setMessages(storeMessages);
-    }
-  }, [chatId, storeMessages]);
+  }, [chatId, storeMessages, isSending, typingMessageId, initialMessage]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -223,11 +273,23 @@ export function ChatPage() {
         files: response.files && response.files.length > 0 ? response.files : undefined,
       };
 
-      setMessages((prev) => [...prev, assistantMessage]);
+      setTypingMessageId(response.message_id);
+      setIsTypingStopped(false);
+      justAddedMessageRef.current = response.message_id;
+      
+      setMessages((prev) => {
+        const existingIds = new Set(prev.map(m => m.id));
+        if (existingIds.has(response.message_id)) {
+          return prev;
+        }
+        return [...prev, assistantMessage];
+      });
+      
       addMessage(chatId, 'assistant', response.response, response.files);
-
-      await new Promise(resolve => setTimeout(resolve, 100));
-      await syncConversationHistory(chatId);
+      
+      setTimeout(() => {
+        justAddedMessageRef.current = null;
+      }, 2000);
     } catch (error) {
       console.error('Failed to send message:', error);
       const errorMessage: Message = {
@@ -240,6 +302,15 @@ export function ChatPage() {
     } finally {
       setIsSending(false);
     }
+  };
+
+  const handleStop = () => {
+    setIsTypingStopped(true);
+    setTypingMessageId(null);
+  };
+
+  const handleTypingComplete = () => {
+    setTypingMessageId(null);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -282,65 +353,73 @@ export function ChatPage() {
                   }`}
                 >
                   <div className="prose prose-invert prose-sm max-w-none">
-                    <ReactMarkdown
-                      remarkPlugins={[remarkGfm]}
-                      components={{
-                        code: ({ node, className, children, ...props }) => {
-                          const match = /language-(\w+)/.exec(className || '');
-                          const isJson = match && match[1] === 'json';
-                          if (isJson) {
-                            return null;
-                          }
-                          return (
-                            <code className={className} {...props}>
+                    {message.role === 'assistant' && typingMessageId === message.id ? (
+                      <TypewriterMessage
+                        content={message.content}
+                        isStopped={isTypingStopped}
+                        onComplete={handleTypingComplete}
+                      />
+                    ) : (
+                      <ReactMarkdown
+                        remarkPlugins={[remarkGfm]}
+                        components={{
+                          code: ({ node, className, children, ...props }) => {
+                            const match = /language-(\w+)/.exec(className || '');
+                            const isJson = match && match[1] === 'json';
+                            if (isJson) {
+                              return null;
+                            }
+                            return (
+                              <code className={className} {...props}>
+                                {children}
+                              </code>
+                            );
+                          },
+                          table: ({ children }) => (
+                            <div className="overflow-x-auto my-4">
+                              <table className="min-w-full border-collapse border border-white/20">
+                                {children}
+                              </table>
+                            </div>
+                          ),
+                          thead: ({ children }) => (
+                            <thead className="bg-white/10">{children}</thead>
+                          ),
+                          tbody: ({ children }) => (
+                            <tbody className="divide-y divide-white/10">{children}</tbody>
+                          ),
+                          tr: ({ children }) => (
+                            <tr className="border-b border-white/10">{children}</tr>
+                          ),
+                          th: ({ children }) => (
+                            <th className="px-4 py-2 text-left font-semibold border border-white/20">
                               {children}
-                            </code>
-                          );
-                        },
-                        table: ({ children }) => (
-                          <div className="overflow-x-auto my-4">
-                            <table className="min-w-full border-collapse border border-white/20">
+                            </th>
+                          ),
+                          td: ({ children }) => (
+                            <td className="px-4 py-2 border border-white/20">
                               {children}
-                            </table>
-                          </div>
-                        ),
-                        thead: ({ children }) => (
-                          <thead className="bg-white/10">{children}</thead>
-                        ),
-                        tbody: ({ children }) => (
-                          <tbody className="divide-y divide-white/10">{children}</tbody>
-                        ),
-                        tr: ({ children }) => (
-                          <tr className="border-b border-white/10">{children}</tr>
-                        ),
-                        th: ({ children }) => (
-                          <th className="px-4 py-2 text-left font-semibold border border-white/20">
-                            {children}
-                          </th>
-                        ),
-                        td: ({ children }) => (
-                          <td className="px-4 py-2 border border-white/20">
-                            {children}
-                          </td>
-                        ),
-                        p: ({ children }) => (
-                          <p className="text-sm leading-relaxed mb-2 last:mb-0">
-                            {children}
-                          </p>
-                        ),
-                        pre: ({ children }) => {
-                          const hasJsonCode = React.Children.toArray(children).some((child: any) => {
-                            return child?.props?.className?.includes('language-json');
-                          });
-                          if (hasJsonCode) {
-                            return null;
-                          }
-                          return <pre className="bg-white/5 p-3 rounded-lg overflow-x-auto my-2">{children}</pre>;
-                        },
-                      }}
-                    >
-                      {removeJsonCodeBlocks(message.content)}
-                    </ReactMarkdown>
+                            </td>
+                          ),
+                          p: ({ children }) => (
+                            <p className="text-sm leading-relaxed mb-2 last:mb-0">
+                              {children}
+                            </p>
+                          ),
+                          pre: ({ children }) => {
+                            const hasJsonCode = React.Children.toArray(children).some((child: any) => {
+                              return child?.props?.className?.includes('language-json');
+                            });
+                            if (hasJsonCode) {
+                              return null;
+                            }
+                            return <pre className="bg-white/5 p-3 rounded-lg overflow-x-auto my-2">{children}</pre>;
+                          },
+                        }}
+                      >
+                        {removeJsonCodeBlocks(message.content)}
+                      </ReactMarkdown>
+                    )}
                   </div>
                   {message.files && message.files.length > 0 && (
                     <div className="mt-3 space-y-2 border-t border-white/10 pt-3">
@@ -411,7 +490,7 @@ export function ChatPage() {
                 className={`flex shrink-0 items-center justify-center rounded-xl p-3 transition-colors ${
                   currentConversation?.context && Object.keys(currentConversation.context).length > 0
                     ? 'bg-[#AD2023] text-white'
-                    : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-gray-200'
+                    : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-gray-200 context-button'
                 }`}
                 aria-label={t('context.edit')}
                 title={t('context.edit')}
@@ -428,14 +507,25 @@ export function ChatPage() {
                 disabled={isSending}
                 className="surface-input flex-1 rounded-2xl px-5 py-3 text-sm placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#AD2023]/50 border disabled:opacity-50"
               />
-              <button
-                type="submit"
-                disabled={!input.trim() || isSending}
-                className="flex shrink-0 items-center justify-center rounded-xl bg-[#AD2023] p-3 text-white hover:bg-[#AD2023]/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                aria-label={t('chat.send')}
-              >
-                <PaperAirplaneIcon className="h-5 w-5" />
-              </button>
+              {typingMessageId ? (
+                <button
+                  type="button"
+                  onClick={handleStop}
+                  className="send-button flex shrink-0 items-center justify-center rounded-xl bg-[#AD2023] p-3 text-white hover:bg-[#AD2023]/90 transition-colors"
+                  aria-label={t('chat.stop')}
+                >
+                  <StopIcon className="h-5 w-5" />
+                </button>
+              ) : (
+                <button
+                  type="submit"
+                  disabled={!input.trim() || isSending}
+                  className="send-button flex shrink-0 items-center justify-center rounded-xl bg-[#AD2023] p-3 text-white hover:bg-[#AD2023]/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  aria-label={t('chat.send')}
+                >
+                  <PaperAirplaneIcon className="h-5 w-5" />
+                </button>
+              )}
             </div>
           </form>
         </div>

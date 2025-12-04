@@ -27,7 +27,8 @@ export function Layout() {
     if (isAuthenticated && user) {
       syncConversations();
     }
-  }, [isAuthenticated, user, syncConversations]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAuthenticated, user]);
 
   const isActive = (path: string) => {
     if (path === '/') {
@@ -77,7 +78,7 @@ export function Layout() {
         }`}
       >
         <div className="mb-6 flex items-center justify-between sm:justify-center">
-          <div className="text-sm font-semibold tracking-tight text-gray-200 flex justify-center items-end">
+          <div className="text-sm font-semibold tracking-tight text-gray-200 flex justify-center items-end sidebar-logo">
             <img src='https://alfabank.servicecdn.ru/site-upload/31/99/10565/D_red_logo.svg'/>
             <span className='text-3xl'> x Smile</span>
           </div>
@@ -97,7 +98,7 @@ export function Layout() {
             className={`flex items-center gap-2 rounded-lg px-3 py-2 transition-colors ${
               isActive('/') && location.pathname !== '/settings' && location.pathname !== '/templates'
                 ? 'bg-white/10 text-[#AD2023] dark:text-[#AD2023]'
-                : 'text-gray-500 hover:bg-white/5 hover:text-gray-200'
+                : 'text-gray-500 hover:bg-white/5 hover:text-gray-200 dark:hover:text-gray-200'
             }`}
           >
             <HomeIcon className="h-4 w-4 text-[#AD2023]" />
@@ -109,7 +110,7 @@ export function Layout() {
             className={`flex items-center gap-2 rounded-lg px-3 py-2 transition-colors ${
               isActive('/templates')
                 ? 'bg-white/10 text-[#AD2023] dark:text-[#AD2023]'
-                : 'text-gray-500 hover:bg-white/5 hover:text-gray-200'
+                : 'text-gray-500 hover:bg-white/5 hover:text-gray-200 dark:hover:text-gray-200'
             }`}
           >
             <Squares2X2Icon className="h-4 w-4 text-[#AD2023]" />
@@ -135,7 +136,7 @@ export function Layout() {
                   className={`group relative flex items-center gap-2 rounded-lg px-3 py-2 text-xs transition-colors ${
                     isChatActive(conv.id)
                       ? 'bg-white/10 text-[#AD2023] dark:text-[#AD2023]'
-                      : 'text-gray-500 hover:bg-white/5 hover:text-gray-200'
+                      : 'text-gray-500 hover:bg-white/5 hover:text-gray-200 dark:hover:text-gray-200'
                   }`}
                 >
                   <ChatBubbleLeftIcon className="h-4 w-4 shrink-0" />
@@ -160,7 +161,7 @@ export function Layout() {
             className={`flex items-center gap-2 rounded-lg px-3 py-2 text-xs transition-colors ${
               isActive('/settings')
                 ? 'bg-white/10 text-[#AD2023] dark:text-[#AD2023]'
-                : 'text-gray-500 hover:bg-white/5 hover:text-gray-200'
+                : 'text-gray-500 hover:bg-white/5 hover:text-gray-200 dark:hover:text-gray-200'
             }`}
           >
             <Cog6ToothIcon className="h-4 w-4 text-[#AD2023]" />
@@ -175,7 +176,7 @@ export function Layout() {
                 className={`flex items-center gap-2 rounded-lg px-3 py-2 text-xs transition-colors ${
                   isActive('/profile')
                     ? 'bg-white/10 text-[#AD2023] dark:text-[#AD2023]'
-                    : 'text-gray-500 hover:bg-white/5 hover:text-gray-200'
+                    : 'text-gray-500 hover:bg-white/5 hover:text-gray-200 dark:hover:text-gray-200'
                 }`}
               >
                 <UserIcon className="h-4 w-4 text-[#AD2023]" />
@@ -183,7 +184,7 @@ export function Layout() {
               </Link>
               <button
                 onClick={handleLogout}
-                className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs text-gray-500 transition-colors hover:bg-white/5 hover:text-gray-200"
+                className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs text-gray-500 transition-colors hover:bg-white/5 hover:text-gray-200 dark:hover:text-gray-200"
               >
                 <ArrowRightOnRectangleIcon className="h-4 w-4 text-[#AD2023]" />
                 <span>{t('auth.logout')}</span>
@@ -194,7 +195,7 @@ export function Layout() {
               <Link
                 to="/login"
                 onClick={handleLinkClick}
-                className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs text-gray-500 transition-colors hover:bg-white/5 hover:text-gray-200"
+                className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs text-gray-500 transition-colors hover:bg-white/5 hover:text-gray-200 dark:hover:text-gray-200"
               >
                 <ArrowRightOnRectangleIcon className="h-4 w-4 text-[#AD2023]" />
                 <span>{t('auth.login')}</span>
@@ -202,7 +203,7 @@ export function Layout() {
               <Link
                 to="/register"
                 onClick={handleLinkClick}
-                className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs text-gray-500 transition-colors hover:bg-white/5 hover:text-gray-200"
+                className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs text-gray-500 transition-colors hover:bg-white/5 hover:text-gray-200 dark:hover:text-gray-200"
               >
                 <UserIcon className="h-4 w-4 text-[#AD2023]" />
                 <span>{t('auth.register')}</span>

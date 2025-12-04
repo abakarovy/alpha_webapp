@@ -32,11 +32,11 @@ body {
   box-shadow: 0 18px 50px rgba(0, 0, 0, 0.8);
 }
 
-.surface-input {
-  background-color: rgba(0, 0, 0, 0.2);
-  border-color: rgba(255, 255, 255, 0.1);
-  color: #e5e7eb;
-}
+  .surface-input {
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #e5e7eb;
+  }
 
 .chat-shell {
   background-color: transparent;
@@ -116,66 +116,120 @@ body {
   text-decoration: underline;
 }
 
-@media (prefers-color-scheme: light) {
-  body {
-    background:
-      radial-gradient(circle at top left, rgba(173, 32, 35, 0.12), transparent 55%),
-      radial-gradient(circle at bottom right, rgba(173, 32, 35, 0.06), transparent 55%),
-      radial-gradient(circle at top right, rgba(15, 23, 42, 0.03), transparent 55%),
-      #f9fafb;
-    background-attachment: fixed;
-    color: #111827;
-  }
+html[data-theme="light"] body {
+  background:
+    radial-gradient(circle at top left, rgba(173, 32, 35, 0.12), transparent 55%),
+    radial-gradient(circle at bottom right, rgba(173, 32, 35, 0.06), transparent 55%),
+    radial-gradient(circle at top right, rgba(15, 23, 42, 0.03), transparent 55%),
+    #f9fafb;
+  background-attachment: fixed;
+  color: #111827;
+}
 
-  .sidebar-shell {
-    background-color: #ffffff;
-    border-right-color: rgba(15, 23, 42, 0.08);
-    color: #111827;
-  }
+html[data-theme="light"] .sidebar-shell {
+  background-color: #ffffff;
+  border-right-color: rgba(15, 23, 42, 0.08);
+  color: #111827;
+}
 
-  .surface-card {
-    background-color: #ffffff;
-    border-color: rgba(15, 23, 42, 0.08);
-    box-shadow: 0 16px 36px rgba(15, 23, 42, 0.08);
-  }
+html[data-theme="light"] .sidebar-shell .text-gray-200 {
+  color: #111827 !important;
+}
 
-  .surface-input {
-    background-color: #ffffff;
-    border-color: rgba(15, 23, 42, 0.12);
-    color: #111827;
-  }
+html[data-theme="light"] .sidebar-shell .sidebar-logo,
+html[data-theme="light"] .sidebar-shell .sidebar-logo span {
+  color: #111827 !important;
+}
 
-  .chat-input-bar {
-    background-color: rgba(255, 255, 255, 0.96);
-    border-top-color: rgba(15, 23, 42, 0.08);
-  }
+html[data-theme="light"] .sidebar-shell a:hover:not(.text-\[#AD2023\]),
+html[data-theme="light"] .sidebar-shell button:hover:not(.text-\[#AD2023\]) {
+  color: #374151 !important;
+}
 
-  .chat-bubble-assistant {
-    background-color: #f3f4f6;
-    border-color: rgba(15, 23, 42, 0.12);
-    color: #111827;
-  }
+html[data-theme="light"] .surface-card {
+  background-color: #ffffff;
+  border-color: rgba(15, 23, 42, 0.08);
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.08);
+}
 
-  .prose table th,
-  .prose table td {
-    border: 1px solid rgba(0, 0, 0, 0.2);
-  }
+html[data-theme="light"] .surface-input {
+  background-color: #ffffff;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  color: #111827;
+}
 
-  .prose table th {
-    background-color: rgba(0, 0, 0, 0.05);
-  }
+html[data-theme="light"] .chat-input-bar {
+  background-color: rgba(255, 255, 255, 0.96);
+  border-top-color: rgba(15, 23, 42, 0.08);
+}
 
-  .prose code {
-    background-color: rgba(0, 0, 0, 0.1);
-  }
+html[data-theme="light"] .chat-bubble-assistant {
+  background-color: #f3f4f6;
+  border-color: rgba(15, 23, 42, 0.12);
+  color: #111827;
+}
 
-  .prose pre {
-    background-color: rgba(0, 0, 0, 0.05);
-  }
+html[data-theme="light"] .prose table th,
+html[data-theme="light"] .prose table td {
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
 
-  .prose a {
-    color: #AD2023;
-  }
+html[data-theme="light"] .prose table th {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+html[data-theme="light"] .prose code {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+html[data-theme="light"] .prose pre {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+html[data-theme="light"] .prose a {
+  color: #AD2023;
+}
+
+html[data-theme="light"] .surface-card button:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+html[data-theme="light"] .surface-card button {
+  border-color: rgba(15, 23, 42, 0.1);
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+html[data-theme="light"] .surface-card button:hover {
+  border-color: rgba(15, 23, 42, 0.2);
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+html[data-theme="light"] .surface-card button p {
+  color: #374151;
+}
+
+html[data-theme="light"] .surface-card button:hover p {
+  color: #111827;
+}
+
+html[data-theme="light"] .context-button {
+  background-color: #AD2023 !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="light"] .context-button:hover {
+  background-color: rgba(173, 32, 35, 0.9) !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="light"] .send-button {
+  background-color: #AD2023 !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="light"] .send-button:hover {
+  background-color: rgba(173, 32, 35, 0.9) !important;
+  color: #ffffff !important;
 }
 
 button,
@@ -184,35 +238,86 @@ a {
 }
 
 select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
   background-color: rgba(0, 0, 0, 0.2);
-  border-color: rgba(255, 255, 255, 0.1);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M2 4L6 8L10 4' stroke='%23e5e7eb' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 12px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.5rem;
   color: #e5e7eb;
+  padding: 0.5rem 2.5rem 0.5rem 1rem;
+  cursor: pointer;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+select:hover {
+  border-color: rgba(255, 255, 255, 0.15);
 }
 
 select:focus {
   outline: none;
   border-color: rgba(173, 32, 35, 0.5);
+  box-shadow: 0 0 0 2px rgba(173, 32, 35, 0.1);
+}
+
+select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 select option {
-  background-color: rgba(0, 0, 0, 0.95);
-  color: #e5e7eb;
-  padding: 0.5rem;
+  background-color: rgba(0, 0, 0, 0.95) !important;
+  color: #e5e7eb !important;
+  padding: 0.75rem 1rem !important;
+  border: none !important;
 }
 
-@media (prefers-color-scheme: light) {
-  select {
-    background-color: #ffffff;
-    border-color: rgba(15, 23, 42, 0.12);
-    color: #111827;
-  }
+select option:checked,
+select option:focus,
+select option:hover {
+  background-color: rgba(173, 32, 35, 0.2) !important;
+  color: #ffffff !important;
+}
 
-  select:focus {
-    border-color: rgba(173, 32, 35, 0.5);
-  }
+select optgroup {
+  background-color: rgba(0, 0, 0, 0.95) !important;
+  color: #e5e7eb !important;
+  font-weight: 600;
+}
 
-  select option {
-    background-color: #ffffff;
-    color: #111827;
-  }
+html[data-theme="light"] select {
+  background-color: #ffffff;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M2 4L6 8L10 4' stroke='%23111827' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  border-color: rgba(15, 23, 42, 0.12);
+  color: #111827;
+}
+
+html[data-theme="light"] select:hover {
+  border-color: rgba(15, 23, 42, 0.2);
+}
+
+html[data-theme="light"] select:focus {
+  border-color: rgba(173, 32, 35, 0.5);
+  box-shadow: 0 0 0 2px rgba(173, 32, 35, 0.1);
+}
+
+html[data-theme="light"] select option {
+  background-color: #ffffff !important;
+  color: #111827 !important;
+}
+
+html[data-theme="light"] select option:checked,
+html[data-theme="light"] select option:focus,
+html[data-theme="light"] select option:hover {
+  background-color: rgba(173, 32, 35, 0.15) !important;
+  color: #111827 !important;
+}
+
+html[data-theme="light"] select optgroup {
+  background-color: #ffffff !important;
+  color: #111827 !important;
 }

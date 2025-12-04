@@ -9,7 +9,7 @@
   },
   "landing": {
     "title": "Smile AI",
-    "subtitle": "Your business assistant UI. Backend and AI will plug in later.",
+    "subtitle": "Your business assistant AI.",
     "placeholder": "Ask anything about your business..."
   },
   "chat": {
@@ -17,6 +17,7 @@
     "emptySubtitle": "Send a message to begin chatting",
     "inputPlaceholder": "Type your message...",
     "send": "Send",
+    "stop": "Stop",
     "placeholderResponse": "This is a placeholder response. Backend integration coming soon.",
     "download": "Download"
   },
@@ -27,7 +28,12 @@
     "language": "Language",
     "appearanceComingSoon": "Theme settings coming soon...",
     "accountComingSoon": "Account settings coming soon...",
-    "selectLanguage": "Select Language"
+    "selectLanguage": "Select Language",
+    "theme": "Theme",
+    "selectTheme": "Select Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
   },
   "templates": {
     "title": "Templates",
@@ -44,6 +50,10 @@
     "nickname": "Nickname",
     "phone": "Phone",
     "country": "Country",
+    "selectCountry": "Select country",
+    "russia": "Russia",
+    "america": "America",
+    "britain": "Britain",
     "gender": "Gender",
     "businessType": "Business Type",
     "selectGender": "Select gender",
@@ -76,6 +86,7 @@
     "goal": "Goal",
     "urgency": "Urgency",
     "region": "Region",
+    "selectRegion": "Select region",
     "businessNiche": "Business Niche",
     "selectUserRole": "Select your role",
     "selectBusinessStage": "Select business stage",
