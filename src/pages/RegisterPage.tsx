@@ -14,6 +14,7 @@ export function RegisterPage() {
     country: '',
     gender: '',
     business_type: 'general',
+    telegram_username: '',
   });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -34,6 +35,7 @@ export function RegisterPage() {
         country: formData.country || undefined,
         gender: formData.gender || undefined,
         business_type: formData.business_type || undefined,
+        telegram_username: formData.telegram_username || undefined,
       });
       navigate('/');
     } catch (err) {
@@ -130,6 +132,21 @@ export function RegisterPage() {
               type="tel"
               value={formData.phone}
               onChange={handleChange}
+              className="surface-input w-full rounded-lg border px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#AD2023]/50"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="telegram_username" className="mb-1 block text-xs font-medium">
+              {t('auth.telegramUsername')}
+            </label>
+            <input
+              id="telegram_username"
+              name="telegram_username"
+              type="text"
+              value={formData.telegram_username}
+              onChange={handleChange}
+              placeholder="@username"
               className="surface-input w-full rounded-lg border px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#AD2023]/50"
             />
           </div>

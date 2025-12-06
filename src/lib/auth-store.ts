@@ -15,6 +15,7 @@ interface AuthStore {
     phone?: string;
     country?: string;
     gender?: string;
+    telegram_username?: string;
   }) => Promise<void>;
   logout: () => void;
   checkAuth: () => Promise<boolean>;

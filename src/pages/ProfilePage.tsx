@@ -20,6 +20,7 @@ export function ProfilePage() {
     country: '',
     gender: '',
     business_type: 'general',
+    telegram_username: '',
   });
 
   useEffect(() => {
@@ -38,6 +39,7 @@ export function ProfilePage() {
           country: userProfile.country || '',
           gender: userProfile.gender || '',
           business_type: userProfile.business_type || 'general',
+          telegram_username: userProfile.telegram_username || '',
         });
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load profile');
@@ -163,6 +165,21 @@ export function ProfilePage() {
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
+                  className="surface-input w-full rounded-lg px-4 py-2 text-sm border focus:outline-none focus:ring-2 focus:ring-[#AD2023]/50"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="telegram_username" className="mb-2 block text-sm text-gray-500">
+                  {t('auth.telegramUsername')}
+                </label>
+                <input
+                  type="text"
+                  id="telegram_username"
+                  name="telegram_username"
+                  value={formData.telegram_username}
+                  onChange={handleChange}
+                  placeholder="@username"
                   className="surface-input w-full rounded-lg px-4 py-2 text-sm border focus:outline-none focus:ring-2 focus:ring-[#AD2023]/50"
                 />
               </div>

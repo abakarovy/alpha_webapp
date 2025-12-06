@@ -75,7 +75,8 @@
     "loading": "Loading...",
     "noAccount": "Don't have an account?",
     "haveAccount": "Already have an account?",
-    "logout": "Logout"
+    "logout": "Logout",
+    "telegramUsername": "Telegram Username"
   },
   "profile": {
     "title": "Profile",

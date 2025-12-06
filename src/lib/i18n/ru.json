@@ -75,7 +75,8 @@
     "loading": "Загрузка...",
     "noAccount": "Нет аккаунта?",
     "haveAccount": "Уже есть аккаунт?",
-    "logout": "Выйти"
+    "logout": "Выйти",
+    "telegramUsername": "Имя пользователя Telegram"
   },
   "profile": {
     "title": "Профиль",

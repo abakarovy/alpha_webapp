@@ -13,6 +13,7 @@ export interface RegisterRequest {
   phone?: string;
   country?: string;
   gender?: string;
+  telegram_username?: string;
 }
 
 export interface RegisterResponse {
@@ -50,6 +51,7 @@ export interface UserProfile {
   phone?: string | null;
   country?: string | null;
   gender?: string | null;
+  telegram_username?: string | null;
 }
 
 export interface ConversationContext {
