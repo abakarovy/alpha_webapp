@@ -7,6 +7,7 @@ html, body {
 
 * {
   font-family: 'Montserrat', sans-serif;
+  box-sizing: border-box;
 }
 
 body {
@@ -35,13 +36,13 @@ body {
   box-shadow: 0 18px 50px rgba(0, 0, 0, 0.8);
 }
 
-  .surface-input {
-    background-color: rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-width: 1px;
-    border-style: solid;
-    color: #e5e7eb;
-  }
+.surface-input {
+  background-color: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-width: 1px;
+  border-style: solid;
+  color: #e5e7eb;
+}
 
 .chat-shell {
   background-color: transparent;
@@ -146,8 +147,8 @@ html[data-theme="light"] .sidebar-shell .sidebar-logo span {
   color: #111827 !important;
 }
 
-html[data-theme="light"] .sidebar-shell a:hover:not(.text-\[#AD2023\]),
-html[data-theme="light"] .sidebar-shell button:hover:not(.text-\[#AD2023\]) {
+html[data-theme="light"] .sidebar-shell a:hover:not(.text-\[\#AD2023\]),
+html[data-theme="light"] .sidebar-shell button:hover:not(.text-\[\#AD2023\]) {
   color: #374151 !important;
 }
 
@@ -182,13 +183,11 @@ html[data-theme="light"] .surface-input svg {
 }
 
 /* Quick message buttons with red border */
-html[data-theme="light"] .surface-input[class*="border-\[#AD2023\]"],
-html[data-theme="light"] .surface-input[class*="border-[#AD2023]"] {
+html[data-theme="light"] .surface-input[class*="AD2023"] {
   border-color: #AD2023 !important;
 }
 
-html[data-theme="light"] .surface-input[class*="border-\[#AD2023\"]:hover,
-html[data-theme="light"] .surface-input[class*="border-[#AD2023]"]:hover {
+html[data-theme="light"] .surface-input[class*="AD2023"]:hover {
   border-color: #AD2023 !important;
 }
 
