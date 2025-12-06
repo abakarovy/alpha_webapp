@@ -80,7 +80,6 @@ export function Layout() {
         <div className="mb-6 flex items-center justify-between sm:justify-center">
           <div className="text-sm font-semibold tracking-tight text-gray-200 flex justify-center items-end sidebar-logo">
             <img src='https://alfabank.servicecdn.ru/site-upload/31/99/10565/D_red_logo.svg'/>
-            <span className='text-3xl'> x Smile</span>
           </div>
           <button
             onClick={() => setIsMobileMenuOpen(false)}

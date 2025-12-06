@@ -58,14 +58,10 @@ export function SettingsPage() {
                 />
               </div>
             </div>
-            <div className="surface-card rounded-xl px-6 py-5">
-              <h2 className="mb-3 text-lg font-medium">
-                {t('settings.account')}
-              </h2>
-              <p className="text-sm text-gray-500">
-                {t('settings.accountComingSoon')}
-              </p>
-            </div>
+            {/* <div className="surface-card rounded-xl px-6 py-5 flex justify-center items-center w-fit">
+              
+              <img src='https://alfabank.servicecdn.ru/site-upload/31/99/10565/D_red_logo.svg'/>
+            </div> */}
           </div>
         </div>
       </div>
