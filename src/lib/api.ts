@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://alpha-backend-c91h.onrender.com';
+const API_BASE_URL = 'http://84.201.149.99:8080';
 
 export interface ApiError {
   error: string;
