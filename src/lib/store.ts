@@ -88,12 +88,12 @@ export const useConversationStore = create<ConversationStore>()(
           const localConversations = response.conversations.map(apiConversationToLocal);
           
           const conversationsWithMessages = await Promise.all(
-            localConversations.map(async (conv) => {
+            localConversations.map(async (conv: Conversation) => {
               try {
                 const history = await chatApi.getHistory(conv.id);
                 return {
                   ...conv,
-                  messages: history.messages.map((msg) => 
+                  messages: history.messages.map((msg: ApiMessage) => 
                     apiMessageToLocal(msg, history.attachments)
                   ),
                   lastMessage: history.messages.length > 0 
@@ -107,7 +107,7 @@ export const useConversationStore = create<ConversationStore>()(
           );
 
           set({
-            conversations: conversationsWithMessages.sort((a, b) => b.updatedAt - a.updatedAt),
+            conversations: conversationsWithMessages.sort((a: Conversation, b: Conversation) => b.updatedAt - a.updatedAt),
             isLoading: false,
           });
         } catch (error) {
@@ -122,7 +122,7 @@ export const useConversationStore = create<ConversationStore>()(
         set({ isLoading: true, error: null });
         try {
           const history = await chatApi.getHistory(conversationId);
-          const apiMessages = history.messages.map((msg) => 
+          const apiMessages = history.messages.map((msg: ApiMessage) => 
             apiMessageToLocal(msg, history.attachments)
           );
           
@@ -147,7 +147,7 @@ export const useConversationStore = create<ConversationStore>()(
             const localMessageIds = new Set(existingConv.messages.map(m => m.id));
             
             const mergedMessages = [...existingConv.messages];
-            apiMessages.forEach((apiMsg) => {
+            apiMessages.forEach((apiMsg: Message) => {
               if (!localMessageIds.has(apiMsg.id)) {
                 mergedMessages.push(apiMsg);
               } else {
