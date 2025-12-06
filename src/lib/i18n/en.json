@@ -10,7 +10,14 @@
   "landing": {
     "title": "Smile AI",
     "subtitle": "Your business assistant AI.",
-    "placeholder": "Ask anything about your business..."
+    "placeholder": "Ask anything about your business...",
+    "quickMessages": {
+      "createMarketingPlan": "Create marketing plan",
+      "analyzeRevenue": "Analyze revenue",
+      "optimizeCosts": "Optimize costs",
+      "hireTeam": "Hire team",
+      "launchAds": "Launch ads"
+    }
   },
   "chat": {
     "emptyTitle": "Start a conversation",

@@ -77,9 +77,10 @@ export function Layout() {
           isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full sm:translate-x-0'
         }`}
       >
-        <div className="mb-6 flex items-center justify-between sm:justify-center">
-          <div className="text-sm font-semibold tracking-tight text-gray-200 flex justify-center items-end sidebar-logo">
-            <img src='https://alfabank.servicecdn.ru/site-upload/31/99/10565/D_red_logo.svg'/>
+        <div className="mb-6 flex items-center justify-between sm:justify-start">
+          <div className="text-sm font-semibold tracking-tight text-gray-200 flex justify-center items-center gap-2 sidebar-logo">
+            <img src='/smile-robot-icon.svg' className="h-10 w-10"/>
+            <span className="text-4xl font-semibold tracking-tight text-gray-200">Smile AI</span>
           </div>
           <button
             onClick={() => setIsMobileMenuOpen(false)}
@@ -212,7 +213,7 @@ export function Layout() {
         </div>
       </aside>
 
-      <main className="flex flex-1 flex-col overflow-hidden">
+      <main className="flex flex-1 flex-col overflow-hidden pt-16 sm:pt-0 sm:pl-0">
         <button
           onClick={() => setIsMobileMenuOpen(true)}
           className="fixed left-4 top-4 z-30 rounded-lg bg-[#AD2023] p-2 text-white shadow-lg sm:hidden"

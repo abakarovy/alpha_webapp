@@ -71,6 +71,49 @@ export function LandingPage() {
     }
   };
 
+  const quickMessages = [
+    { key: 'landing.quickMessages.createMarketingPlan', value: t('landing.quickMessages.createMarketingPlan') },
+    { key: 'landing.quickMessages.analyzeRevenue', value: t('landing.quickMessages.analyzeRevenue') },
+    { key: 'landing.quickMessages.optimizeCosts', value: t('landing.quickMessages.optimizeCosts') },
+    { key: 'landing.quickMessages.hireTeam', value: t('landing.quickMessages.hireTeam') },
+    { key: 'landing.quickMessages.launchAds', value: t('landing.quickMessages.launchAds') },
+  ];
+
+  const handleQuickMessage = async (message: string) => {
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+
+    setIsLoading(true);
+    const title = message.length > 30 ? message.substring(0, 30) + '...' : message;
+
+    try {
+      let conversationId: string;
+
+      if (context && Object.keys(context).length > 0) {
+        const createResponse = await chatApi.createConversation({
+          user_id: user.id,
+          title,
+          context,
+        });
+        conversationId = createResponse.conversation_id;
+      } else {
+        conversationId = nanoid();
+      }
+
+      addConversation(conversationId, title, message, context);
+      navigate(`/chat/${conversationId}?message=${encodeURIComponent(message)}`);
+    } catch (error) {
+      console.error('Failed to create conversation:', error);
+      const fallbackId = nanoid();
+      addConversation(fallbackId, title, message, context);
+      navigate(`/chat/${fallbackId}?message=${encodeURIComponent(message)}`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="flex flex-1 items-center">
       <div className="w-full px-4 sm:px-10 lg:px-24">
@@ -84,7 +127,20 @@ export function LandingPage() {
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="mt-6 sm:mt-8 px-2 sm:px-4 lg:px-8">
+          <form onSubmit={handleSubmit} className="mt-6 sm:mt-8 px-2 sm:px-4 lg:px-8 space-y-3">
+            <div className="flex flex-wrap gap-2 justify-center">
+              {quickMessages.map((message) => (
+                <button
+                  key={message.key}
+                  type="button"
+                  onClick={() => handleQuickMessage(message.value)}
+                  disabled={isLoading}
+                  className="surface-input px-4 py-2 rounded-full text-sm border border-[#AD2023] hover:bg-[#AD2023]/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {message.value}
+                </button>
+              ))}
+            </div>
             <div className="flex items-center gap-2 sm:gap-3 min-w-0">
               <button
                 type="button"

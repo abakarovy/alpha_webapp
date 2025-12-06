@@ -55,7 +55,7 @@ export function CustomSelect({
         id={id}
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="surface-input w-auto min-w-[200px] rounded-lg border border-white/10 px-4 py-2 text-left text-sm focus:outline-none focus:ring-2 focus:ring-[#AD2023]/50 flex items-center justify-between"
+        className="surface-input w-auto min-w-[200px] rounded-lg px-4 py-2 text-left text-sm focus:outline-none focus:ring-2 focus:ring-[#AD2023]/50 flex items-center justify-between"
       >
         <span className={`flex-1 truncate ${selectedOption ? '' : 'text-gray-500'}`}>
           {selectedOption ? selectedOption.label : placeholder}
