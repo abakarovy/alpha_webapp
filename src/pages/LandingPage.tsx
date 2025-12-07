@@ -119,9 +119,12 @@ export function LandingPage() {
       <div className="w-full px-4 sm:px-10 lg:px-24">
         <div className="surface-card mx-auto max-w-3xl rounded-3xl px-4 py-8 text-center sm:px-8 sm:py-12 lg:px-12 lg:py-16 space-y-6 sm:space-y-10">
           <div className="space-y-2">
-            <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl lg:text-4xl">
-              {t('landing.title')}
-            </h1>
+            <div className='flex row justify-center items-center gap-2'>
+              <img src='/smile-robot-icon.svg' className="h-10 w-10 text-red-500"/>
+              <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl lg:text-4xl">
+                {t('landing.title')}
+              </h1>
+            </div>
             <p className="text-xs text-gray-500 sm:text-sm lg:text-[15px]">
               {t('landing.subtitle')}
             </p>
