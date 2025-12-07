@@ -158,12 +158,14 @@ html[data-theme="light"] .surface-card {
   box-shadow: 0 16px 36px rgba(15, 23, 42, 0.08);
 }
 
-html[data-theme="light"] .surface-input {
+html[data-theme="light"] .surface-input,
+html[data-theme="light"] .surface-card .surface-input,
+html[data-theme="light"] .surface-card button.surface-input {
   background-color: #ffffff !important;
   border-width: 1px !important;
   border-style: solid !important;
   border-color: #6b7280 !important;
-  color: #111827;
+  color: #111827 !important;
 }
 
 html[data-theme="light"] .surface-input:hover {
@@ -189,6 +191,31 @@ html[data-theme="light"] .surface-input[class*="AD2023"] {
 
 html[data-theme="light"] .surface-input[class*="AD2023"]:hover {
   border-color: #AD2023 !important;
+}
+
+/* Quick message buttons */
+.quick-message-btn,
+.surface-card .quick-message-btn,
+html[data-theme="light"] .quick-message-btn,
+html[data-theme="light"] .surface-card .quick-message-btn {
+  background-color: #ffffff !important;
+  border: 1px solid #AD2023 !important;
+  border-width: 1px !important;
+  border-style: solid !important;
+  border-color: #AD2023 !important;
+  color: #000000 !important;
+}
+
+.quick-message-btn:hover,
+.surface-card .quick-message-btn:hover,
+html[data-theme="light"] .quick-message-btn:hover,
+html[data-theme="light"] .surface-card .quick-message-btn:hover {
+  background-color: rgba(173, 32, 35, 0.1) !important;
+  border: 1px solid #AD2023 !important;
+  border-width: 1px !important;
+  border-style: solid !important;
+  border-color: #AD2023 !important;
+  color: #000000 !important;
 }
 
 html[data-theme="light"] .chat-input-bar {
@@ -223,32 +250,34 @@ html[data-theme="light"] .prose a {
   color: #AD2023;
 }
 
-html[data-theme="light"] .surface-card button:hover {
-  background-color: rgba(0, 0, 0, 0.05);
-}
-
-html[data-theme="light"] .surface-card button {
+html[data-theme="light"] .surface-card button:not(.quick-message-btn):not(.surface-input) {
   border-color: rgba(15, 23, 42, 0.1);
   background-color: rgba(0, 0, 0, 0.02);
 }
 
-html[data-theme="light"] .surface-card button:hover {
+html[data-theme="light"] .surface-card button:not(.quick-message-btn):not(.surface-input):hover {
   border-color: rgba(15, 23, 42, 0.2);
   background-color: rgba(0, 0, 0, 0.05);
 }
 
 /* Исключения для кнопок с красным фоном */
-html[data-theme="light"] .surface-card button[class*="AD2023"],
-html[data-theme="light"] .surface-card button.context-button,
-html[data-theme="light"] .surface-card button.send-button {
+html[data-theme="light"] .surface-card button.surface-input {
+  background-color: #ffffff !important;
+  border-color: #6b7280 !important;
+  color: #111827 !important;
+}
+
+html[data-theme="light"] .surface-card button[class*="AD2023"]:not(.surface-input),
+html[data-theme="light"] .surface-card button.context-button:not(.surface-input),
+html[data-theme="light"] .surface-card button.send-button:not(.surface-input) {
   background-color: #AD2023 !important;
   border-color: transparent !important;
   color: #ffffff !important;
 }
 
-html[data-theme="light"] .surface-card button[class*="AD2023"]:hover,
-html[data-theme="light"] .surface-card button.context-button:hover,
-html[data-theme="light"] .surface-card button.send-button:hover {
+html[data-theme="light"] .surface-card button[class*="AD2023"]:not(.surface-input):hover,
+html[data-theme="light"] .surface-card button.context-button:not(.surface-input):hover,
+html[data-theme="light"] .surface-card button.send-button:not(.surface-input):hover {
   background-color: rgba(173, 32, 35, 0.9) !important;
   border-color: transparent !important;
   color: #ffffff !important;

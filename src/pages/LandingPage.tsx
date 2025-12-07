@@ -135,7 +135,7 @@ export function LandingPage() {
                   type="button"
                   onClick={() => handleQuickMessage(message.value)}
                   disabled={isLoading}
-                  className="surface-input px-4 py-2 rounded-full text-sm border border-[#AD2023] hover:bg-[#AD2023]/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="quick-message-btn px-4 py-2 rounded-full text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {message.value}
                 </button>
